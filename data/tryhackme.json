@@ -1,0 +1,27 @@
+{
+  "username": "gvbytes",
+  "profile_url": "https://tryhackme.com/p/gvbytes",
+  "rank": null,
+  "rooms_completed": 4,
+  "badges": [],
+  "completed_rooms": [
+    {
+      "title": "Tutorial",
+      "status": "completed"
+    },
+    {
+      "title": "Offensive Security Intro",
+      "status": "completed"
+    },
+    {
+      "title": "Defensive Security Intro",
+      "status": "completed"
+    },
+    {
+      "title": "Careers in Cyber",
+      "status": "completed"
+    }
+  ],
+  "badge_image_path": null,
+  "last_updated": "2026-07-11T19:44:45Z"
+}
