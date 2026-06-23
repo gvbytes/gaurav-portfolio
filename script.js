@@ -658,14 +658,19 @@
         const countEl = document.querySelector('.terminal-output.t-line[style*="1.9s"]');
         if (countEl) countEl.textContent = String(repos.length);
 
-        // Exceptions to place in "Other Projects" instead of "Cybersecurity Tools"
-        const cyberExceptions = ['del-and-bits', 'del-bits', 'del&bits', 'srm-secure-browser-review', 'srm-secure-browser-vulnerabilities', 'gaurav-portfolio'];
+        // Categorization mapping
+        const vulnMapped = ['srm-secure-browser-vulnerabilities', 'srm-secure-browser-review'];
+        const otherMapped = ['del-and-bits', 'del-bits', 'del&bits', 'gaurav-portfolio'];
 
         const cyberRepos = [];
+        const vulnRepos = [];
         const otherRepos = [];
 
         repos.forEach((repo) => {
-            if (cyberExceptions.includes(repo.name.toLowerCase())) {
+            const nameLower = repo.name.toLowerCase();
+            if (vulnMapped.includes(nameLower)) {
+                vulnRepos.push(repo);
+            } else if (otherMapped.includes(nameLower)) {
                 otherRepos.push(repo);
             } else {
                 cyberRepos.push(repo);
@@ -681,6 +686,19 @@
             const grid = document.createElement('div');
             grid.className = 'projects-grid';
             cyberRepos.forEach((repo, i) => grid.appendChild(createProjectCard(repo, i)));
+            container.appendChild(grid);
+        }
+
+        if (vulnRepos.length > 0) {
+            const h3 = document.createElement('h3');
+            h3.className = 'project-group-title animate-on-scroll';
+            h3.style.marginTop = '48px';
+            h3.innerHTML = `<svg class="group-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Vulnerability analysis`;
+            container.appendChild(h3);
+
+            const grid = document.createElement('div');
+            grid.className = 'projects-grid';
+            vulnRepos.forEach((repo, i) => grid.appendChild(createProjectCard(repo, i)));
             container.appendChild(grid);
         }
 
