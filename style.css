@@ -1105,6 +1105,8 @@ body {
     transition: border-color 0.35s ease, box-shadow 0.35s ease;
     position: relative;
     overflow: hidden;
+    text-decoration: none;
+    color: inherit;
 }
 
 .trusthouse-glow {
@@ -1157,6 +1159,30 @@ body {
     background: rgba(245, 158, 11, 0.06);
     color: var(--accent-amber);
     border: 1px solid rgba(245, 158, 11, 0.1);
+}
+
+.trusthouse-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: var(--accent-amber);
+    font-weight: 500;
+    margin-top: 20px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.trusthouse-link:hover {
+    color: var(--text-primary);
+}
+
+.trusthouse-link svg {
+    transition: transform 0.3s ease;
+}
+
+.trusthouse-card:hover .trusthouse-link svg {
+    transform: translate(2px, -2px);
 }
 
 /* ═══════════════════════════════════════════════════
