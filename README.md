@@ -19,16 +19,6 @@ My personal portfolio site. Built from scratch with plain HTML, CSS, and JavaScr
 - GitHub REST API for live project cards
 - GitHub Actions for TryHackMe data sync
 
-## Running locally
-
-Just open `index.html` in a browser. No install, no dependencies.
-
-If you want a local server (for the JSON fetch to work):
-
-```
-npx serve .
-```
-
 ## Live
 
-**[gaurav.is-a.dev](https://gaurav.is-a.dev)**
+**[gvbytes.com](https://gvbytes.com)**
