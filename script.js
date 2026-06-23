@@ -659,7 +659,7 @@
         if (countEl) countEl.textContent = String(repos.length);
 
         // Exceptions to place in "Other Projects" instead of "Cybersecurity Tools"
-        const cyberExceptions = ['del-and-bits', 'del-bits', 'del&bits', 'srm-secure-browser-review', 'gaurav-portfolio'];
+        const cyberExceptions = ['del-and-bits', 'del-bits', 'del&bits', 'srm-secure-browser-review', 'srm-secure-browser-vulnerabilities', 'gaurav-portfolio'];
 
         const cyberRepos = [];
         const otherRepos = [];
