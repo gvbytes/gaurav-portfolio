@@ -1370,62 +1370,6 @@
     }
 
     /* ════════════════════════════════════════════════
-       4d. BINARY QUESTION MARK HUD EFFECT
-       ════════════════════════════════════════════════ */
-
-    function initBinaryQuestionMark() {
-        const grid = document.getElementById('binary-q-mark');
-        if (!grid) return;
-
-        const cells = grid.querySelectorAll('span');
-        let intervalId = null;
-
-        function startFlicker() {
-            if (intervalId) return;
-            intervalId = setInterval(() => {
-                cells.forEach((cell) => {
-                    const isActive = cell.classList.contains('active');
-                    if (!isActive) {
-                        if (Math.random() < 0.22) {
-                            cell.textContent = cell.textContent === '0' ? '1' : '0';
-                            if (Math.random() < 0.06) {
-                                cell.style.color = 'rgba(0, 212, 255, 0.16)';
-                            } else {
-                                cell.style.color = '';
-                            }
-                        }
-                    } else {
-                        if (Math.random() < 0.02) {
-                            cell.style.opacity = '0.35';
-                            setTimeout(() => cell.style.opacity = '1', 70);
-                        }
-                    }
-                });
-            }, 100);
-        }
-
-        function stopFlicker() {
-            clearInterval(intervalId);
-            intervalId = null;
-            cells.forEach((cell, idx) => {
-                cell.style.color = '';
-                cell.style.opacity = '';
-                const activeIndices = [1, 2, 3, 5, 9, 14, 18, 22, 32];
-                cell.textContent = activeIndices.includes(idx) ? '1' : '0';
-            });
-        }
-
-        grid.addEventListener('mouseenter', startFlicker);
-        grid.addEventListener('mouseleave', stopFlicker);
-
-        const header = grid.closest('.section-header');
-        if (header) {
-            header.addEventListener('mouseenter', startFlicker);
-            header.addEventListener('mouseleave', stopFlicker);
-        }
-    }
-
-    /* ════════════════════════════════════════════════
        INIT
        ════════════════════════════════════════════════ */
 
@@ -1436,7 +1380,6 @@
         renderProjects();
         renderTryHackMe();
         renderLeetCode();
-        initBinaryQuestionMark();
         initCardTilt();
         initScrollAnimations();
         initTerminalAnimation();
