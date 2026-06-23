@@ -740,6 +740,14 @@
                 if (data.completed_rooms && data.completed_rooms.length > 0) {
                     rooms = data.completed_rooms;
                 }
+                if (data.badge_image_path) {
+                    const badgeContainer = document.getElementById('thm-badge-container');
+                    const badgeImg = document.getElementById('thm-badge-img');
+                    if (badgeContainer && badgeImg) {
+                        badgeImg.src = data.badge_image_path + '?v=' + Date.now();
+                        badgeContainer.style.display = 'flex';
+                    }
+                }
             }
         } catch (_) { /* use fallback */ }
 

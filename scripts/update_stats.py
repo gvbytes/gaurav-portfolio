@@ -77,6 +77,33 @@ def update_tryhackme(username="gvbytes"):
         ]
         rooms_completed = 2
 
+    # Download TryHackMe live badge
+    badge_path = None
+    badge_url = f"https://tryhackme.com/badge/{username}"
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+    req = urllib.request.Request(badge_url, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=15) as response:
+            content_type = response.headers.get('Content-Type', '')
+            data = response.read()
+            ext = 'svg' if 'svg' in content_type.lower() else 'png'
+            badge_outfile = f"data/tryhackme_badge.{ext}"
+            with open(badge_outfile, 'wb') as f:
+                f.write(data)
+            badge_path = badge_outfile
+            print(f"Successfully downloaded badge to {badge_outfile}")
+            
+            # Clean up other format if it exists
+            other_ext = 'png' if ext == 'svg' else 'svg'
+            other_file = f"data/tryhackme_badge.{other_ext}"
+            if os.path.exists(other_file):
+                try: os.remove(other_file)
+                except: pass
+    except Exception as e:
+        print(f"Error downloading TryHackMe badge image: {e}", file=sys.stderr)
+        if existing.get('badge_image_path') and os.path.exists(existing['badge_image_path']):
+            badge_path = existing['badge_image_path']
+
     result = {
         'username': username,
         'profile_url': f"https://tryhackme.com/p/{username}",
@@ -84,6 +111,7 @@ def update_tryhackme(username="gvbytes"):
         'rooms_completed': rooms_completed,
         'badges': badges,
         'completed_rooms': completed_rooms,
+        'badge_image_path': badge_path,
         'last_updated': datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     }
 
