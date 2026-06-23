@@ -1,4 +1,4 @@
-# gaurav.is-a.dev
+# gvbytes.com
 
 My personal portfolio site. Built from scratch with plain HTML, CSS, and JavaScript — no frameworks, no build step.
 
