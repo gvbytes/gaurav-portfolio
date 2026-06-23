@@ -151,7 +151,8 @@
                 <span class="section-tag">// learning</span>
                 <h2>Learning Journey</h2>
             </div>
-            <div class="learning-grid">
+            <div class="learning-grid" id="learning-grid">
+                <!-- Populated by JS from data/tryhackme.json -->
                 <div class="learning-card animate-on-scroll">
                     <div class="learning-card-header">
                         <div class="learning-icon tryhackme-icon">
@@ -163,12 +164,10 @@
                         tryhackme.com/p/gvbytes
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
                     </a>
-                    <ul class="learning-items">
-                        <li><span class="badge badge-complete">Completed</span>Offensive Security Intro</li>
-                        <li><span class="badge badge-complete">Completed</span>Defensive Security Intro</li>
+                    <ul class="learning-items" id="thm-rooms-list">
+                        <li class="loading" style="color:var(--text-muted);font-style:italic;">Loading progress…</li>
                     </ul>
                 </div>
-
             </div>
         </div>
     </section>
@@ -250,11 +249,26 @@
     </footer>
 
     <div class="physics-dock" id="physics-dock">
-        <span class="dock-label">Physics</span>
-        <button class="dock-btn" id="btn-gravity" data-mode="gravity" title="Gravity">G</button>
-        <button class="dock-btn" id="btn-vacuum" data-mode="vacuum" title="Vacuum">V</button>
-        <button class="dock-btn" id="btn-blackhole" data-mode="blackhole" title="Black Hole">B</button>
-        <button class="dock-btn dock-btn-reset" id="btn-reset" title="Reset">Reset</button>
+        <button class="dock-btn" id="btn-gravity" data-mode="gravity" title="Gravity">
+            <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+            <span class="dock-btn-label">Gravity</span>
+        </button>
+        <button class="dock-btn" id="btn-vacuum" data-mode="vacuum" title="Vacuum">
+            <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+            <span class="dock-btn-label">Vacuum</span>
+        </button>
+        <button class="dock-btn" id="btn-blackhole" data-mode="blackhole" title="Black Hole">
+            <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1c4.97 0 9 3.58 9 8s-4.03 8-9 8"/><path d="M12 1C7.03 1 3 4.58 3 9s4.03 8 9 8"/><path d="M12 17c-2.76 0-5 1.79-5 4h10c0-2.21-2.24-4-5-4z"/></svg>
+            <span class="dock-btn-label">Black Hole</span>
+        </button>
+        <button class="dock-btn" id="btn-explode" data-mode="explode" title="Explode">
+            <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span class="dock-btn-label">Explode</span>
+        </button>
+        <button class="dock-btn dock-btn-reset" id="btn-reset" title="Reset">
+            <svg class="dock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            <span class="dock-btn-label">Reset</span>
+        </button>
     </div>
 
     <!-- ── Back to top ── -->

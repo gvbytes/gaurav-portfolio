@@ -8,19 +8,11 @@
 (function () {
     'use strict';
 
-    const PROJECTS = [
-        { repo: 'del-and-bits',              url: 'https://github.com/gvbytes/del-and-bits' },
-        { repo: 'cipher-wheel',              url: 'https://github.com/gvbytes/cipher-wheel' },
-        { repo: 'local-port-scout',          url: 'https://github.com/gvbytes/local-port-scout' },
-        { repo: 'linksleuth',                url: 'https://github.com/gvbytes/linksleuth' },
-        { repo: 'passgauge',                 url: 'https://github.com/gvbytes/passgauge' },
-        { repo: 'packet-peek',               url: 'https://github.com/gvbytes/packet-peek' },
-        { repo: 'logtrail',                  url: 'https://github.com/gvbytes/logtrail' },
-        { repo: 'watchtower-file-check',     url: 'https://github.com/gvbytes/watchtower-file-check' },
-        { repo: 'vaultlock',                 url: 'https://github.com/gvbytes/vaultlock' },
-        { repo: 'netsentry-lite',            url: 'https://github.com/gvbytes/netsentry-lite' },
-        { repo: 'srm-secure-browser-review', url: 'https://github.com/gvbytes/srm-secure-browser-review' },
-    ];
+    /* ── GitHub username (single source of truth) ── */
+    const GH_USER = 'gvbytes';
+
+    /* Repos to exclude from the projects grid */
+    const EXCLUDE_REPOS = ['gvbytes', 'gaurav-portfolio'];
 
     /* Shared ref for theme-switching Three.js materials */
     let sceneRefs = null;
@@ -569,12 +561,25 @@
 
     function createProjectCard(project, index) {
         const card = document.createElement('a');
-        card.href = project.url;
+        card.href = project.html_url || `https://github.com/${GH_USER}/${project.name}`;
         card.target = '_blank';
         card.rel = 'noopener noreferrer';
         card.className = 'project-card animate-on-scroll';
         card.style.transitionDelay = `${index * 0.06}s`;
-        card.id = `project-${project.repo}`;
+        card.id = `project-${project.name}`;
+
+        const lang = project.language || '';
+        const stars = project.stargazers_count || 0;
+        const desc = project.description || 'View on GitHub →';
+
+        let footerExtra = '';
+        if (lang) {
+            footerExtra += `<span class="project-lang-dot" style="background: ${getLangColor(lang)}"></span><span>${lang}</span>`;
+        }
+        if (stars > 0) {
+            footerExtra += `<span style="margin-left:auto;display:inline-flex;align-items:center;gap:3px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${stars}</span>`;
+        }
+
         card.innerHTML = `
             <div class="project-card-header">
                 <div class="project-card-icon">
@@ -584,33 +589,111 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                 </div>
             </div>
-            <h3 class="project-card-title">${project.repo}</h3>
-            <p class="project-card-desc loading" id="desc-${project.repo}">Fetching description…</p>
+            <h3 class="project-card-title">${project.name}</h3>
+            <p class="project-card-desc">${desc}</p>
             <div class="project-card-footer">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                <span>gvbytes/${project.repo}</span>
+                <span>${GH_USER}/${project.name}</span>
+                ${footerExtra}
             </div>`;
         return card;
     }
 
-    async function fetchDesc(repo) {
-        const key = `gv_desc_${repo}`;
-        try { const c = localStorage.getItem(key); if (c) { const { desc, ts } = JSON.parse(c); if (Date.now() - ts < 3600000) return desc; } } catch (_) {}
-        try { const r = await fetch(`https://api.github.com/repos/gvbytes/${repo}`); if (r.ok) { const d = await r.json(); const desc = d.description || null; try { localStorage.setItem(key, JSON.stringify({ desc, ts: Date.now() })); } catch (_) {} return desc; } } catch (_) {}
-        return null;
+    function getLangColor(lang) {
+        const colors = {
+            'JavaScript': '#f1e05a', 'Python': '#3572A5', 'HTML': '#e34c26',
+            'CSS': '#563d7c', 'TypeScript': '#3178c6', 'Shell': '#89e051',
+            'Go': '#00ADD8', 'Rust': '#dea584', 'C': '#555555',
+            'C++': '#f34b7d', 'Java': '#b07219', 'Ruby': '#701516',
+        };
+        return colors[lang] || 'var(--accent-cyan)';
     }
 
-    function renderProjects() {
+    async function fetchGitHubRepos() {
+        const cacheKey = 'gv_repos_cache';
+        try {
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+                const { data, ts } = JSON.parse(cached);
+                if (Date.now() - ts < 600000) return data; /* 10-min cache */
+            }
+        } catch (_) {}
+
+        try {
+            const res = await fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated`);
+            if (!res.ok) throw new Error(res.status);
+            const repos = await res.json();
+            const filtered = repos.filter(r => !r.fork && !EXCLUDE_REPOS.includes(r.name));
+            try { localStorage.setItem(cacheKey, JSON.stringify({ data: filtered, ts: Date.now() })); } catch (_) {}
+            return filtered;
+        } catch (_) {
+            /* Return cached data even if expired on network failure */
+            try {
+                const cached = localStorage.getItem(cacheKey);
+                if (cached) return JSON.parse(cached).data;
+            } catch (__) {}
+            return null;
+        }
+    }
+
+    async function renderProjects() {
         const grid = document.getElementById('projects-grid');
         if (!grid) return;
-        PROJECTS.forEach((p, i) => {
-            grid.appendChild(createProjectCard(p, i));
-            fetchDesc(p.repo).then((d) => {
-                const el = document.getElementById(`desc-${p.repo}`);
-                if (el) { el.textContent = d || 'View on GitHub →'; el.classList.remove('loading'); }
-            });
-        });
+
+        /* Show loading skeleton while fetching */
+        grid.innerHTML = '<p class="project-card-desc loading" style="grid-column:1/-1;text-align:center;padding:40px 0;">Loading projects from GitHub…</p>';
+
+        const repos = await fetchGitHubRepos();
+        grid.innerHTML = '';
+
+        if (!repos || repos.length === 0) {
+            grid.innerHTML = '<p class="project-card-desc" style="grid-column:1/-1;text-align:center;">Could not load projects. <a href="https://github.com/gvbytes" target="_blank" style="color:var(--accent-cyan);">View on GitHub →</a></p>';
+            return;
+        }
+
+        /* Update the terminal project count */
+        const countEl = document.querySelector('.terminal-output.t-line[style*="1.9s"]');
+        if (countEl) countEl.textContent = String(repos.length);
+
+        repos.forEach((repo, i) => grid.appendChild(createProjectCard(repo, i)));
         initScrollAnimations();
+    }
+
+    /* ════════════════════════════════════════════════
+       4b. TRYHACKME PROGRESS — AUTO-UPDATED
+       ════════════════════════════════════════════════ */
+
+    async function renderTryHackMe() {
+        const list = document.getElementById('thm-rooms-list');
+        if (!list) return;
+
+        /* Fallback data in case fetch fails */
+        const fallback = [
+            { title: 'Offensive Security Intro', status: 'completed' },
+            { title: 'Defensive Security Intro', status: 'completed' },
+        ];
+
+        let rooms = fallback;
+        try {
+            const res = await fetch('data/tryhackme.json');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.completed_rooms && data.completed_rooms.length > 0) {
+                    rooms = data.completed_rooms;
+                }
+            }
+        } catch (_) { /* use fallback */ }
+
+        list.innerHTML = '';
+        rooms.forEach((room) => {
+            const li = document.createElement('li');
+            const badge = document.createElement('span');
+            badge.className = room.status === 'completed' ? 'badge badge-complete' : 'badge badge-progress';
+            badge.textContent = room.status === 'completed' ? 'Completed' : 'In Progress';
+            li.appendChild(badge);
+            li.appendChild(document.createTextNode(room.title));
+            list.appendChild(li);
+        });
     }
 
     function initCardTilt() {
@@ -799,6 +882,16 @@
 
     window.addEventListener('mousedown', () => { isMouseDown = true; });
     window.addEventListener('mouseup', () => { isMouseDown = false; });
+
+    /* Touch support for mobile physics */
+    window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+            mousePos.x = e.touches[0].clientX + window.scrollX;
+            mousePos.y = e.touches[0].clientY + window.scrollY;
+        }
+    }, { passive: true });
+    window.addEventListener('touchstart', () => { isMouseDown = true; }, { passive: true });
+    window.addEventListener('touchend', () => { isMouseDown = false; }, { passive: true });
 
     function preparePhysicsBodies() {
         const bodies = [];
@@ -1068,6 +1161,50 @@
                     p.opacity = 0;
                 }
             }
+            else if (physicsMode === 'explode') {
+                /* Light gravity pulls everything down after the initial burst */
+                p.vy += 0.15;
+                p.vx *= 0.985;
+
+                /* Cursor repulsion */
+                const dx = (absX + p.width / 2) - mousePos.x;
+                const dy = (absY + p.height / 2) - mousePos.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const pushRadius = 180;
+                if (dist < pushRadius) {
+                    const force = (1 - dist / pushRadius) * 4.5;
+                    p.vx += (dx / dist) * force;
+                    p.vy += (dy / dist) * force;
+                }
+
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rotation += (p.vx + p.vy) * 1.5;
+
+                /* Floor collision with low bounce */
+                const bottomY = p.initialY + p.y + p.height;
+                if (bottomY >= floorY) {
+                    p.y = floorY - p.initialY - p.height;
+                    p.vy = -p.vy * 0.4;
+                    p.vx *= 0.7;
+                    if (Math.abs(p.vy) < 0.3) p.vy = 0;
+                }
+
+                /* Ceiling */
+                if (p.initialY + p.y <= ceilingY) {
+                    p.y = ceilingY - p.initialY;
+                    p.vy = -p.vy * 0.4;
+                }
+
+                /* Walls */
+                if (absX <= leftWallX) {
+                    p.x = leftWallX - p.initialX;
+                    p.vx = -p.vx * 0.5;
+                } else if (absX + p.width >= rightWallX) {
+                    p.x = rightWallX - p.initialX - p.width;
+                    p.vx = -p.vx * 0.5;
+                }
+            }
 
             p.applyStyles();
         });
@@ -1107,18 +1244,42 @@
                 physicsActive = true;
                 document.body.classList.add('phy-active');
 
+                /* Screen shake on activation */
+                document.body.classList.remove('phy-shake');
+                void document.body.offsetWidth; /* force reflow to restart animation */
+                document.body.classList.add('phy-shake');
+                setTimeout(() => document.body.classList.remove('phy-shake'), 400);
+
                 if (vtx) {
                     vtx.classList.toggle('active', mode === 'blackhole');
                     vtx.style.left = `${mousePos.x - window.scrollX}px`;
                     vtx.style.top = `${mousePos.y - window.scrollY}px`;
                 }
 
-                physicsBodies.forEach((p) => {
-                    p.vx = (Math.random() - 0.5) * 6;
-                    p.vy = (Math.random() - 0.5) * 6;
-                    p.scale = 1;
-                    p.opacity = 1;
-                });
+                if (mode === 'explode') {
+                    /* Radial burst from viewport center */
+                    const cx = window.innerWidth / 2 + window.scrollX;
+                    const cy = window.innerHeight / 2 + window.scrollY;
+                    physicsBodies.forEach((p) => {
+                        const px = p.initialX + p.x + p.width / 2;
+                        const py = p.initialY + p.y + p.height / 2;
+                        let dx = px - cx;
+                        let dy = py - cy;
+                        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                        const force = 12 + Math.random() * 10;
+                        p.vx = (dx / dist) * force + (Math.random() - 0.5) * 4;
+                        p.vy = (dy / dist) * force - Math.random() * 6;
+                        p.scale = 1;
+                        p.opacity = 1;
+                    });
+                } else {
+                    physicsBodies.forEach((p) => {
+                        p.vx = (Math.random() - 0.5) * 6;
+                        p.vy = (Math.random() - 0.5) * 6;
+                        p.scale = 1;
+                        p.opacity = 1;
+                    });
+                }
 
                 cancelAnimationFrame(physicsFrameId);
                 runPhysicsLoop();
@@ -1167,6 +1328,7 @@
         initNavigation();
         initSmoothScroll();
         renderProjects();
+        renderTryHackMe();
         initCardTilt();
         initScrollAnimations();
         initTerminalAnimation();
