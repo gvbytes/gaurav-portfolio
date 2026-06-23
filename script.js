@@ -636,8 +636,12 @@
     }
 
     async function renderProjects() {
-        const container = document.getElementById('projects-container');
+        const container = document.getElementById('projects-container') || document.getElementById('projects-grid');
         if (!container) return;
+
+        if (container.id === 'projects-grid') {
+            container.className = '';
+        }
 
         /* Show loading skeleton while fetching */
         container.innerHTML = '<p class="project-card-desc loading" style="text-align:center;padding:40px 0;">Loading projects from GitHub…</p>';
