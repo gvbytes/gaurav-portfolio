@@ -1,6 +1,9 @@
 name: Update TryHackMe and LeetCode Progress
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     # Runs every hour
     - cron: '0 * * * *'
@@ -27,7 +30,8 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet data/tryhackme.json data/leetcode.json 2>/dev/null; then
+          git add -N data/
+          if git diff --quiet data/ 2>/dev/null; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -38,6 +42,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/tryhackme.json data/leetcode.json
+          git add data/
           git commit -m "Auto-update TryHackMe and LeetCode progress [skip ci]"
           git push
