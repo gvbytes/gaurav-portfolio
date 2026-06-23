@@ -5,6 +5,20 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
+os.makedirs("data", exist_ok=True)
+class StderrLogger(object):
+    def __init__(self):
+        self.terminal = sys.stderr
+        self.log = open("data/error_log.txt", "w", encoding="utf-8")
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+
+sys.stderr = StderrLogger()
+
 def fetch_json(url, post_data=None, headers=None):
     if headers is None:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
