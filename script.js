@@ -11,8 +11,7 @@
     /* ── GitHub username (single source of truth) ── */
     const GH_USER = 'gvbytes';
 
-    /* Repos to exclude from the projects grid */
-    const EXCLUDE_REPOS = ['gvbytes', 'gaurav-portfolio'];
+    const EXCLUDE_REPOS = ['gvbytes'];
 
     /* Shared ref for theme-switching Three.js materials */
     let sceneRefs = null;
@@ -637,17 +636,17 @@
     }
 
     async function renderProjects() {
-        const grid = document.getElementById('projects-grid');
-        if (!grid) return;
+        const container = document.getElementById('projects-container');
+        if (!container) return;
 
         /* Show loading skeleton while fetching */
-        grid.innerHTML = '<p class="project-card-desc loading" style="grid-column:1/-1;text-align:center;padding:40px 0;">Loading projects from GitHub…</p>';
+        container.innerHTML = '<p class="project-card-desc loading" style="text-align:center;padding:40px 0;">Loading projects from GitHub…</p>';
 
         const repos = await fetchGitHubRepos();
-        grid.innerHTML = '';
+        container.innerHTML = '';
 
         if (!repos || repos.length === 0) {
-            grid.innerHTML = '<p class="project-card-desc" style="grid-column:1/-1;text-align:center;">Could not load projects. <a href="https://github.com/gvbytes" target="_blank" style="color:var(--accent-cyan);">View on GitHub →</a></p>';
+            container.innerHTML = '<p class="project-card-desc" style="text-align:center;">Could not load projects. <a href="https://github.com/gvbytes" target="_blank" style="color:var(--accent-cyan);">View on GitHub →</a></p>';
             return;
         }
 
@@ -655,7 +654,45 @@
         const countEl = document.querySelector('.terminal-output.t-line[style*="1.9s"]');
         if (countEl) countEl.textContent = String(repos.length);
 
-        repos.forEach((repo, i) => grid.appendChild(createProjectCard(repo, i)));
+        // Exceptions to place in "Other Projects" instead of "Cybersecurity Tools"
+        const cyberExceptions = ['del-and-bits', 'del-bits', 'del&bits', 'srm-secure-browser-review', 'gaurav-portfolio'];
+
+        const cyberRepos = [];
+        const otherRepos = [];
+
+        repos.forEach((repo) => {
+            if (cyberExceptions.includes(repo.name.toLowerCase())) {
+                otherRepos.push(repo);
+            } else {
+                cyberRepos.push(repo);
+            }
+        });
+
+        if (cyberRepos.length > 0) {
+            const h3 = document.createElement('h3');
+            h3.className = 'project-group-title animate-on-scroll';
+            h3.innerHTML = `<svg class="group-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Cybersecurity Tools`;
+            container.appendChild(h3);
+
+            const grid = document.createElement('div');
+            grid.className = 'projects-grid';
+            cyberRepos.forEach((repo, i) => grid.appendChild(createProjectCard(repo, i)));
+            container.appendChild(grid);
+        }
+
+        if (otherRepos.length > 0) {
+            const h3 = document.createElement('h3');
+            h3.className = 'project-group-title animate-on-scroll';
+            h3.style.marginTop = '48px';
+            h3.innerHTML = `<svg class="group-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg> Other Projects`;
+            container.appendChild(h3);
+
+            const grid = document.createElement('div');
+            grid.className = 'projects-grid';
+            otherRepos.forEach((repo, i) => grid.appendChild(createProjectCard(repo, i)));
+            container.appendChild(grid);
+        }
+
         initScrollAnimations();
     }
 
