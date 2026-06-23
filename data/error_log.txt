@@ -1,0 +1,53 @@
+HTTP Error fetching https://tryhackme.com/api/badges/get/gvbytes: 429 Too Many Requests
+Response headers: Cache-Control: private, no-store, max-age=0
+Content-Type: text/html; charset=utf-8
+Server: Vercel
+X-Vercel-Challenge-Token: 2.1782222199.60.NTVjMjQzMmJlYzE3OWQ4YmFhZWVkMDQ2Y2JlMTJlNjg7NTE1M2FiZTY7ZTkxNmRmYTg3MWQzYjAzODU2MjRjYmNmYzliNDY2ZDZjMTFlZDE0OTszO8oxH4yLuIO6cdPfrbzrr41MhbYhZuVbxwTTQ2yku79d9/x2aCEecGL0XxOK8Xw=.ca0d6f26909ee3debdf0039ef26b29db
+X-Vercel-Id: sfo1::1782222199-OuFTRb6NoNkDzy2IFHbVC5NmekkSwS3X
+X-Vercel-Mitigated: challenge
+Date: Tue, 23 Jun 2026 13:43:19 GMT
+Connection: close
+Transfer-Encoding: chunked
+
+
+Response body (first 500 chars): <!DOCTYPE html><html lang="en" data-astro-cid-nbv56vs3> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#000"><title>Vercel Security Checkpoint</title><style>.spinner[data-astro-cid-jlpqxutv]{display:flex;flex-direction:column;justify-content:center;align-items:center}.spinner-circle[data-astro-cid-jlpqxutv]{transform-origin:center;animation:spinner-circle-animate 1s step-start infinite}rect[data-astro-cid-jlpqxutv
+HTTP Error fetching https://tryhackme.com/api/user/rank/gvbytes: 429 Too Many Requests
+Response headers: Cache-Control: private, no-store, max-age=0
+Content-Type: text/html; charset=utf-8
+Server: Vercel
+X-Vercel-Challenge-Token: 2.1782222199.60.NTVjMjQzMmJlYzE3OWQ4YmFhZWVkMDQ2Y2JlMTJlNjg7NGY2NDljMWI7MzcxOTJhZjNjNGQzMGNhOGM3NzNhMjg3Yjc4Nzk1ZjVmZmZhMDYyZjszO0Dv1LlhwO5ESMDCQscO6wUZ5kUP3P7ozSiYVHvHSXsKYXM5H1YALuwJ35R6D5U=.b249fcab72dee733d09ce500920aeb9a
+X-Vercel-Id: sfo1::1782222199-udc2YIrszOTzZ33xlqTnIaCfa9FZ0lzQ
+X-Vercel-Mitigated: challenge
+Date: Tue, 23 Jun 2026 13:43:19 GMT
+Connection: close
+Transfer-Encoding: chunked
+
+
+Response body (first 500 chars): <!DOCTYPE html><html lang="en" data-astro-cid-nbv56vs3> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#000"><title>Vercel Security Checkpoint</title><style>.spinner[data-astro-cid-jlpqxutv]{display:flex;flex-direction:column;justify-content:center;align-items:center}.spinner-circle[data-astro-cid-jlpqxutv]{transform-origin:center;animation:spinner-circle-animate 1s step-start infinite}rect[data-astro-cid-jlpqxutv
+HTTP Error fetching https://tryhackme.com/api/no-completed-rooms-public/gvbytes: 429 Too Many Requests
+Response headers: Cache-Control: private, no-store, max-age=0
+Content-Type: text/html; charset=utf-8
+Server: Vercel
+X-Vercel-Challenge-Token: 2.1782222199.60.NTVjMjQzMmJlYzE3OWQ4YmFhZWVkMDQ2Y2JlMTJlNjg7MGI4MjBkYzk7N2UzZGYyZjJmMDM5YTUxMTdkOTM3ZmUxMWU1MDNlNjRhYWVjNDE1MjszO67s8z/jwKwwgZX+zFj9sLoq5DgzT97Pzz62jFgd9vKwWKNf96WXIVWIlKwBONQ=.0802f68c1caf5262bcda47cc1d8f03d2
+X-Vercel-Id: sfo1::1782222199-RujW4eZye0pByABXJbPAPWX8UPBRZlLC
+X-Vercel-Mitigated: challenge
+Date: Tue, 23 Jun 2026 13:43:19 GMT
+Connection: close
+Transfer-Encoding: chunked
+
+
+Response body (first 500 chars): <!DOCTYPE html><html lang="en" data-astro-cid-nbv56vs3> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#000"><title>Vercel Security Checkpoint</title><style>.spinner[data-astro-cid-jlpqxutv]{display:flex;flex-direction:column;justify-content:center;align-items:center}.spinner-circle[data-astro-cid-jlpqxutv]{transform-origin:center;animation:spinner-circle-animate 1s step-start infinite}rect[data-astro-cid-jlpqxutv
+HTTP Error fetching https://tryhackme.com/api/all-completed-rooms?username=gvbytes: 429 Too Many Requests
+Response headers: Cache-Control: private, no-store, max-age=0
+Content-Type: text/html; charset=utf-8
+Server: Vercel
+X-Vercel-Challenge-Token: 2.1782222200.60.NTVjMjQzMmJlYzE3OWQ4YmFhZWVkMDQ2Y2JlMTJlNjg7MTA5Yjc0ZTA7YzcwMWExZjk4YmI0NzcwODM4NTU2N2ViYjFmNDk1ZWViMjRiMTIxZTszOyvarTKI16SRkElIl5g+mIPp6ZxlfW/ORwFsbdO7PlTMyYyF4Ws1QZghpB3e2c4=.735fb2af96d7aee74890e6964e71f05f
+X-Vercel-Id: sfo1::1782222200-VhpCG6CWsgrf3UZuNlnpRMt3scmxEwDW
+X-Vercel-Mitigated: challenge
+Date: Tue, 23 Jun 2026 13:43:20 GMT
+Connection: close
+Transfer-Encoding: chunked
+
+
+Response body (first 500 chars): <!DOCTYPE html><html lang="en" data-astro-cid-nbv56vs3> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#000"><title>Vercel Security Checkpoint</title><style>.spinner[data-astro-cid-jlpqxutv]{display:flex;flex-direction:column;justify-content:center;align-items:center}.spinner-circle[data-astro-cid-jlpqxutv]{transform-origin:center;animation:spinner-circle-animate 1s step-start infinite}rect[data-astro-cid-jlpqxutv
+Error downloading TryHackMe badge image: HTTP Error 429: Too Many Requests
