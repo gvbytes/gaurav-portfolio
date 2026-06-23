@@ -2,16 +2,26 @@ import os
 import sys
 import json
 import urllib.request
+import urllib.error
 from datetime import datetime, timezone
 
 def fetch_json(url, post_data=None, headers=None):
     if headers is None:
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
     
     req = urllib.request.Request(url, data=post_data, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=15) as response:
             return json.loads(response.read().decode('utf-8'))
+    except urllib.error.HTTPError as e:
+        print(f"HTTP Error fetching {url}: {e.code} {e.reason}", file=sys.stderr)
+        print(f"Response headers: {e.headers}", file=sys.stderr)
+        try:
+            body = e.read().decode('utf-8', errors='ignore')
+            print(f"Response body (first 500 chars): {body[:500]}", file=sys.stderr)
+        except Exception as read_err:
+            print(f"Failed to read error body: {read_err}", file=sys.stderr)
+        return None
     except Exception as e:
         print(f"Error fetching {url}: {e}", file=sys.stderr)
         return None
