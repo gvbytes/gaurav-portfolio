@@ -696,6 +696,56 @@
         });
     }
 
+    /* ════════════════════════════════════════════════
+       4c. LEETCODE PROGRESS — AUTO-UPDATED
+       ════════════════════════════════════════════════ */
+
+    async function renderLeetCode() {
+        const container = document.getElementById('lc-stats');
+        if (!container) return;
+
+        const fallback = { total_solved: 0, easy_solved: 0, medium_solved: 0, hard_solved: 0, total_easy: 876, total_medium: 1850, total_hard: 800, ranking: null };
+        let data = fallback;
+
+        try {
+            const res = await fetch('data/leetcode.json');
+            if (res.ok) {
+                const json = await res.json();
+                if (json.total_solved !== undefined) data = json;
+            }
+        } catch (_) { /* use fallback */ }
+
+        const total = data.total_solved || 0;
+        const easy = data.easy_solved || 0;
+        const med = data.medium_solved || 0;
+        const hard = data.hard_solved || 0;
+        const tEasy = data.total_easy || 876;
+        const tMed = data.total_medium || 1850;
+        const tHard = data.total_hard || 800;
+
+        container.innerHTML = `
+            <div class="lc-total"><span class="lc-total-num">${total}</span><span class="lc-total-label">problems solved</span></div>
+            <div class="lc-bar-group">
+                <div class="lc-bar-row">
+                    <span class="lc-diff lc-easy">Easy</span>
+                    <div class="lc-bar"><div class="lc-bar-fill lc-fill-easy" style="width:${tEasy ? (easy / tEasy * 100) : 0}%"></div></div>
+                    <span class="lc-count">${easy}<span class="lc-of">/${tEasy}</span></span>
+                </div>
+                <div class="lc-bar-row">
+                    <span class="lc-diff lc-medium">Med</span>
+                    <div class="lc-bar"><div class="lc-bar-fill lc-fill-medium" style="width:${tMed ? (med / tMed * 100) : 0}%"></div></div>
+                    <span class="lc-count">${med}<span class="lc-of">/${tMed}</span></span>
+                </div>
+                <div class="lc-bar-row">
+                    <span class="lc-diff lc-hard">Hard</span>
+                    <div class="lc-bar"><div class="lc-bar-fill lc-fill-hard" style="width:${tHard ? (hard / tHard * 100) : 0}%"></div></div>
+                    <span class="lc-count">${hard}<span class="lc-of">/${tHard}</span></span>
+                </div>
+            </div>
+            ${data.ranking ? `<div class="lc-rank">Ranking: <strong>${data.ranking.toLocaleString()}</strong></div>` : ''}
+        `;
+    }
+
     function initCardTilt() {
         if (window.innerWidth < 768) return;
         document.addEventListener('mousemove', (e) => {
@@ -1329,6 +1379,7 @@
         initSmoothScroll();
         renderProjects();
         renderTryHackMe();
+        renderLeetCode();
         initCardTilt();
         initScrollAnimations();
         initTerminalAnimation();

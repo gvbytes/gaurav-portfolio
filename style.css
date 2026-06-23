@@ -1097,6 +1097,95 @@ body {
     border: 1px solid rgba(245, 158, 11, 0.15);
 }
 
+/* LeetCode icon */
+.leetcode-icon { color: #ffa116; }
+
+/* LeetCode stats */
+.lc-total {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.lc-total-num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.lc-total-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.lc-bar-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lc-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lc-diff {
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: 36px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.lc-easy { color: #00b8a3; }
+.lc-medium { color: #ffc01e; }
+.lc-hard { color: #ef4743; }
+
+.lc-bar {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+}
+
+[data-theme="light"] .lc-bar {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.lc-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+    min-width: 2px;
+}
+
+.lc-fill-easy { background: #00b8a3; }
+.lc-fill-medium { background: #ffc01e; }
+.lc-fill-hard { background: #ef4743; }
+
+.lc-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 60px;
+    text-align: right;
+}
+
+.lc-of {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.lc-rank {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
 /* ═══════════════════════════════════════════════════
    TRUSTHOUSE
    ═══════════════════════════════════════════════════ */
