@@ -96,10 +96,12 @@ def update_tryhackme(username="gvbytes"):
     # Fallback to defaults if completely empty
     if not completed_rooms:
         completed_rooms = [
+            {'title': 'Tutorial', 'status': 'completed'},
             {'title': 'Offensive Security Intro', 'status': 'completed'},
-            {'title': 'Defensive Security Intro', 'status': 'completed'}
+            {'title': 'Defensive Security Intro', 'status': 'completed'},
+            {'title': 'Careers in Cyber', 'status': 'completed'}
         ]
-        rooms_completed = 2
+        rooms_completed = 4
 
     # Download TryHackMe live badge
     badge_path = None
