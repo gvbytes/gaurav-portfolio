@@ -1375,10 +1375,16 @@ body {
 
 @media (max-width: 1024px) {
     .about-grid { grid-template-columns: 1fr; gap: 36px; }
+    .social-links { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .social-card { padding: 28px 16px 24px; }
+    .social-icon-wrapper { width: 50px; height: 50px; }
 }
 
 @media (max-width: 768px) {
+    /* ── Nav ── */
     .nav-toggle { display: flex; }
+    .nav-container { height: 60px; }
+    .nav-logo { font-size: 1.3rem; }
 
     .nav-links {
         position: fixed;
@@ -1390,7 +1396,7 @@ body {
         background: rgba(6, 6, 14, 0.96);
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
-        padding: 100px 32px 40px;
+        padding: 80px 28px 40px;
         gap: 4px;
         transform: translateX(100%);
         transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1402,26 +1408,129 @@ body {
     }
 
     .nav-links.open { transform: translateX(0); }
-    .nav-link { font-size: 1.1rem; padding: 14px 16px; }
+    .nav-link { font-size: 1.05rem; padding: 12px 16px; }
 
-    .projects-grid { grid-template-columns: 1fr; }
-    .learning-grid { grid-template-columns: 1fr; }
-    .trusthouse-card { flex-direction: column; padding: 28px; }
+    /* ── Sections ── */
+    .section { padding: clamp(48px, 8vh, 80px) 0; }
+    .section + .section::before { margin: 0 auto clamp(48px, 8vh, 80px); }
+    .section-header { margin-bottom: 32px; }
+    .section-header h2 { font-size: clamp(1.6rem, 5vw, 2.2rem); }
+    .section-subtitle { font-size: 0.9rem; margin-top: 8px; }
 
-    .social-links { grid-template-columns: 1fr; margin-bottom: 48px; }
-    .social-card { flex-direction: row; justify-content: flex-start; padding: 22px 24px; }
+    /* ── Hero ── */
+    .hero-content { padding: 0 16px; }
+    .hero-badge { padding: 6px 16px; font-size: 0.72rem; gap: 8px; margin-bottom: 20px; }
+    .hero-name { font-size: clamp(2.8rem, 12vw, 4.5rem); margin-bottom: 12px; }
+    .hero-tagline { font-size: 0.95rem; margin-bottom: 32px; }
+    .hero-cta { gap: 12px; }
+    .btn { padding: 12px 24px; font-size: 0.85rem; border-radius: 10px; }
 
     .scroll-indicator { display: none; }
-
     .cursor-glow { display: none; }
     .floating-shapes { display: none; }
+
+    /* ── About ── */
+    .about-text p { font-size: 1rem; line-height: 1.75; margin-bottom: 16px; }
+
+    /* ── Terminal ── */
+    .terminal-body {
+        padding: 16px;
+        font-size: 0.78rem;
+        line-height: 1.9;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .terminal-header { padding: 10px 14px; gap: 10px; }
+    .terminal-dot { width: 9px; height: 9px; }
+    .terminal-title { font-size: 0.68rem; }
+    .terminal-output { padding-left: 14px; }
+
+    /* ── Projects ── */
+    .projects-grid { grid-template-columns: 1fr; gap: 16px; }
+    .project-card { padding: 22px; gap: 12px; border-radius: 14px; }
+    .project-card-title { font-size: 0.95rem; }
+    .project-card-desc { font-size: 0.88rem; line-height: 1.7; }
+
+    /* ── Learning ── */
+    .learning-grid { grid-template-columns: 1fr; gap: 16px; }
+    .learning-card { padding: 24px; border-radius: 14px; }
+    .learning-card h3 { font-size: 1.08rem; }
+    .learning-profile-link { font-size: 0.75rem; margin-bottom: 16px; }
+    .learning-items li { font-size: 0.85rem; gap: 8px; }
+
+    /* ── TrustHouse ── */
+    .trusthouse-card { flex-direction: column; padding: 24px; gap: 20px; border-radius: 14px; }
+    .trusthouse-icon { width: 48px; height: 48px; border-radius: 12px; }
+    .trusthouse-description { font-size: 1rem; line-height: 1.75; margin-bottom: 16px; }
+    .trusthouse-link { font-size: 0.82rem; margin-top: 16px; }
+
+    /* ── Social / Footer ── */
+    .social-links { grid-template-columns: 1fr; gap: 12px; margin-bottom: 48px; }
+    .social-card {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 18px 20px;
+        gap: 14px;
+        border-radius: 14px;
+    }
+    .social-icon-wrapper { width: 44px; height: 44px; }
+    .social-icon-wrapper svg { width: 20px; height: 20px; }
+    .social-label { font-size: 0.95rem; margin-top: 0; }
+    .social-handle { font-size: 0.75rem; }
+    .social-card-arrow { top: 50%; right: 16px; transform: translateY(-50%); }
+    .social-card:hover .social-card-arrow { transform: translateY(-50%) translate(2px, -2px); }
+
+    .footer-bottom { padding: 20px 0; }
+    .footer-bottom p { font-size: 0.78rem; }
+
+    /* ── Back to top — move above physics dock ── */
+    .back-to-top {
+        bottom: 80px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+    }
+
+    /* ── Ambient glow — smaller on mobile ── */
+    .glow-1 { width: 300px; height: 300px; }
+    .glow-2 { width: 250px; height: 250px; }
+    .glow-3 { width: 200px; height: 200px; }
 }
 
 @media (max-width: 480px) {
-    .hero-name { font-size: 3rem; }
-    .hero-cta { flex-direction: column; align-items: center; }
-    .btn { width: 100%; justify-content: center; }
+    .hero-name { font-size: clamp(2.2rem, 14vw, 3rem); }
+    .hero-tagline { font-size: 0.88rem; margin-bottom: 28px; }
+    .hero-cta { flex-direction: column; align-items: stretch; }
+    .btn { width: 100%; justify-content: center; padding: 14px 20px; }
+
+    .container { padding: 0 clamp(14px, 4vw, 20px); }
+
+    .project-card { padding: 18px; }
+    .project-card-title { font-size: 0.9rem; }
+    .project-card-desc { font-size: 0.84rem; }
+
+    .learning-card { padding: 20px; }
+    .trusthouse-card { padding: 20px; }
+    .trusthouse-description { font-size: 0.92rem; }
+
+    .terminal-body { font-size: 0.72rem; padding: 12px; }
+
+    .section-header h2 { font-size: 1.5rem; }
+
+    .badge { font-size: 0.65rem; padding: 2px 8px; }
+    .tech-tag { font-size: 0.72rem; padding: 4px 10px; }
 }
+
+@media (max-width: 360px) {
+    .hero-name { font-size: 2rem; }
+    .hero-badge { font-size: 0.65rem; padding: 5px 12px; }
+    .nav-container { height: 54px; }
+    .nav-logo { font-size: 1.2rem; }
+    .container { padding: 0 12px; }
+    .terminal-body { font-size: 0.68rem; }
+}
+
 
 /* ═══════════════════════════════════════════════════
    MISC
