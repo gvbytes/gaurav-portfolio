@@ -1360,6 +1360,7 @@
                 physicsMode = mode;
                 physicsActive = true;
                 document.body.classList.add('phy-active');
+                document.documentElement.classList.add('phy-active');
 
                 /* Screen shake on activation */
                 document.body.classList.remove('phy-shake');
@@ -1414,6 +1415,7 @@
             physicsActive = false;
             physicsMode = null;
             document.body.classList.remove('phy-active');
+            document.documentElement.classList.remove('phy-active');
             if (vtx) vtx.classList.remove('active');
             
             cancelAnimationFrame(physicsFrameId);
