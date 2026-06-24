@@ -67,35 +67,69 @@
     }
 
     /* Theme-switch all materials */
+    /* Theme-switch all materials */
     function updateSceneTheme(isDark) {
         if (!sceneRefs) return;
         const THREE = window.THREE;
-        const { particleMat, accentMat, lineMat, geoMaterials } = sceneRefs;
+        const { bgPointsMat, midPointsMat, accentMat, fgPointsMat, lineMat, nebulaMaterials, geoMaterials } = sceneRefs;
 
         const blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
 
-        particleMat.color.setHex(isDark ? 0x00d4ff : 0x0099cc);
-        particleMat.opacity = isDark ? 0.7 : 0.5;
-        particleMat.blending = blending;
-        particleMat.needsUpdate = true;
+        if (bgPointsMat) {
+            bgPointsMat.color.setHex(isDark ? 0x005588 : 0xb3d9ff);
+            bgPointsMat.opacity = isDark ? 0.6 : 0.4;
+            bgPointsMat.blending = blending;
+            bgPointsMat.needsUpdate = true;
+        }
 
-        accentMat.color.setHex(isDark ? 0x7c3aed : 0x6d28d9);
-        accentMat.opacity = isDark ? 0.4 : 0.3;
-        accentMat.blending = blending;
-        accentMat.needsUpdate = true;
+        if (midPointsMat) {
+            midPointsMat.color.setHex(isDark ? 0x00d4ff : 0x0099cc);
+            midPointsMat.opacity = isDark ? 0.8 : 0.6;
+            midPointsMat.blending = blending;
+            midPointsMat.needsUpdate = true;
+        }
 
-        lineMat.opacity = isDark ? 0.3 : 0.15;
-        lineMat.blending = blending;
-        lineMat.needsUpdate = true;
+        if (accentMat) {
+            accentMat.color.setHex(isDark ? 0x7c3aed : 0x6d28d9);
+            accentMat.opacity = isDark ? 0.6 : 0.4;
+            accentMat.blending = blending;
+            accentMat.needsUpdate = true;
+        }
 
-        geoMaterials.forEach((m) => {
-            m.blending = blending;
-            m.opacity = isDark ? m.userData.darkOp : m.userData.lightOp;
-            if (m.userData.colorDark && m.userData.colorLight) {
-                m.color.setHex(isDark ? m.userData.colorDark : m.userData.colorLight);
-            }
-            m.needsUpdate = true;
-        });
+        if (fgPointsMat) {
+            fgPointsMat.color.setHex(isDark ? 0xd946ef : 0xdb2777);
+            fgPointsMat.opacity = isDark ? 0.5 : 0.3;
+            fgPointsMat.blending = blending;
+            fgPointsMat.needsUpdate = true;
+        }
+
+        if (lineMat) {
+            lineMat.opacity = isDark ? 0.35 : 0.18;
+            lineMat.blending = blending;
+            lineMat.needsUpdate = true;
+        }
+
+        if (nebulaMaterials) {
+            const colorsDark = [0x0044aa, 0x5500aa, 0x440055];
+            const colorsLight = [0xb3d1ff, 0xe1b3ff, 0xffb3e6];
+            nebulaMaterials.forEach((m, idx) => {
+                m.color.setHex(isDark ? colorsDark[idx % colorsDark.length] : colorsLight[idx % colorsLight.length]);
+                m.opacity = isDark ? 0.18 : 0.06;
+                m.blending = blending;
+                m.needsUpdate = true;
+            });
+        }
+
+        if (geoMaterials) {
+            geoMaterials.forEach((m) => {
+                m.blending = blending;
+                m.opacity = isDark ? m.userData.darkOp : m.userData.lightOp;
+                if (m.userData.colorDark && m.userData.colorLight) {
+                    m.color.setHex(isDark ? m.userData.colorDark : m.userData.colorLight);
+                }
+                m.needsUpdate = true;
+            });
+        }
     }
 
     function initScene() {
@@ -106,6 +140,64 @@
         const isMobile = window.innerWidth < 768;
         const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
         const blending = isDark ? THREE.AdditiveBlending : THREE.NormalBlending;
+
+        /* ── Helper: Canvas-generated soft particle texture ── */
+        function createParticleTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+            grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.8)');
+            grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.2)');
+            grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 32, 32);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        /* ── Helper: Canvas-generated nebula cloud texture ── */
+        function createNebulaTexture(colorHex, opacity = 1.0) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            
+            const grad = ctx.createRadialGradient(256, 256, 10, 256, 256, 256);
+            const r = (colorHex >> 16) & 255;
+            const g = (colorHex >> 8) & 255;
+            const b = colorHex & 255;
+            
+            grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${opacity})`);
+            grad.addColorStop(0.2, `rgba(${Math.min(255, r * 1.2)}, ${g * 0.7}, ${Math.min(255, b * 1.3)}, ${opacity * 0.7})`);
+            grad.addColorStop(0.5, `rgba(${r * 0.5}, ${g * 0.2}, ${b * 0.8}, ${opacity * 0.35})`);
+            grad.addColorStop(0.8, `rgba(${r * 0.2}, 0, ${b * 0.5}, ${opacity * 0.1})`);
+            grad.addColorStop(1.0, 'rgba(0, 0, 0, 0)');
+            
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 512, 512);
+            
+            for (let i = 0; i < 6; i++) {
+                const cx = 256 + (Math.random() - 0.5) * 160;
+                const cy = 256 + (Math.random() - 0.5) * 160;
+                const radius = 100 + Math.random() * 120;
+                const cloudGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+                
+                cloudGrad.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${opacity * 0.2})`);
+                cloudGrad.addColorStop(0.5, `rgba(${r * 0.7}, ${g * 0.3}, ${b * 0.9}, ${opacity * 0.08})`);
+                cloudGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                
+                ctx.fillStyle = cloudGrad;
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.needsUpdate = true;
+            return tex;
+        }
 
         /* ── Renderer / Camera / Scene ── */
         const scene = new THREE.Scene();
@@ -120,46 +212,88 @@
         const world = new THREE.Group();
         scene.add(world);
 
-        /* ═══ PARTICLES ═══ */
-        const PCOUNT = isMobile ? 40 : 110;
-        const SPREAD = 75;
-        const HALF   = SPREAD / 2;
-        const CDIST  = isMobile ? 6 : 8.5;
+        /* ── Parallax Groups ── */
+        const bgGroup = new THREE.Group();
+        const midGroup = new THREE.Group();
+        const fgGroup = new THREE.Group();
+        const nebulaGroup = new THREE.Group();
 
-        const pPos = new Float32Array(PCOUNT * 3);
-        const pVel = [];
-        for (let i = 0; i < PCOUNT; i++) {
-            pPos[i * 3]     = (Math.random() - 0.5) * SPREAD;
-            pPos[i * 3 + 1] = (Math.random() - 0.5) * SPREAD;
-            pPos[i * 3 + 2] = (Math.random() - 0.5) * SPREAD;
-            pVel.push(new THREE.Vector3(
+        world.add(bgGroup);
+        world.add(midGroup);
+        world.add(fgGroup);
+        world.add(nebulaGroup);
+
+        const particleTex = createParticleTexture();
+
+        /* ═══ 1. BACKGROUND PARTICLES (Cosmic Dust) ═══ */
+        let bgPointsMat = null;
+        if (!isMobile) {
+            const BG_PCOUNT = 180;
+            const BG_SPREAD = 120;
+            const bgPos = new Float32Array(BG_PCOUNT * 3);
+            for (let i = 0; i < BG_PCOUNT; i++) {
+                bgPos[i * 3]     = (Math.random() - 0.5) * BG_SPREAD;
+                bgPos[i * 3 + 1] = (Math.random() - 0.5) * BG_SPREAD;
+                bgPos[i * 3 + 2] = -40 - Math.random() * 50;
+            }
+            const bgGeo = new THREE.BufferGeometry();
+            bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+            bgPointsMat = new THREE.PointsMaterial({
+                color: isDark ? 0x005588 : 0xb3d9ff,
+                size: 1.5,
+                map: particleTex,
+                transparent: true,
+                opacity: isDark ? 0.6 : 0.4,
+                sizeAttenuation: true,
+                blending,
+                depthWrite: false,
+            });
+            const bgPoints = new THREE.Points(bgGeo, bgPointsMat);
+            bgGroup.add(bgPoints);
+        }
+
+        /* ═══ 2. MID LAYER (Neural Network) ═══ */
+        const MID_PCOUNT = isMobile ? 40 : 80;
+        const MID_SPREAD = 60;
+        const HALF = MID_SPREAD / 2;
+        const CDIST = isMobile ? 6 : 8.5;
+
+        const midPos = new Float32Array(MID_PCOUNT * 3);
+        const midVel = [];
+        for (let i = 0; i < MID_PCOUNT; i++) {
+            midPos[i * 3]     = (Math.random() - 0.5) * MID_SPREAD;
+            midPos[i * 3 + 1] = (Math.random() - 0.5) * MID_SPREAD;
+            midPos[i * 3 + 2] = -15 - Math.random() * 25;
+            midVel.push(new THREE.Vector3(
                 (Math.random() - 0.5) * 0.012,
                 (Math.random() - 0.5) * 0.012,
                 (Math.random() - 0.5) * 0.012
             ));
         }
 
-        const pGeo = new THREE.BufferGeometry();
-        pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-        const particleMat = new THREE.PointsMaterial({
+        const midGeo = new THREE.BufferGeometry();
+        midGeo.setAttribute('position', new THREE.BufferAttribute(midPos, 3));
+        const midPointsMat = new THREE.PointsMaterial({
             color: isDark ? 0x00d4ff : 0x0099cc,
-            size: isMobile ? 2 : 2.4,
+            size: isMobile ? 2.0 : 2.5,
+            map: particleTex,
             transparent: true,
-            opacity: isDark ? 0.7 : 0.5,
+            opacity: isDark ? 0.8 : 0.6,
             sizeAttenuation: true,
             blending,
             depthWrite: false,
         });
-        world.add(new THREE.Points(pGeo, particleMat));
+        const midPoints = new THREE.Points(midGeo, midPointsMat);
+        midGroup.add(midPoints);
 
-        /* Accent particles */
-        const ACOUNT = Math.floor(PCOUNT * 0.14);
+        /* Accent particles (in mid layer) */
+        const ACOUNT = Math.floor(MID_PCOUNT * 0.14);
         const aPos = new Float32Array(ACOUNT * 3);
         const aVel = [];
         for (let i = 0; i < ACOUNT; i++) {
-            aPos[i * 3]     = (Math.random() - 0.5) * SPREAD;
-            aPos[i * 3 + 1] = (Math.random() - 0.5) * SPREAD;
-            aPos[i * 3 + 2] = (Math.random() - 0.5) * SPREAD;
+            aPos[i * 3]     = (Math.random() - 0.5) * MID_SPREAD;
+            aPos[i * 3 + 1] = (Math.random() - 0.5) * MID_SPREAD;
+            aPos[i * 3 + 2] = -15 - Math.random() * 25;
             aVel.push(new THREE.Vector3(
                 (Math.random() - 0.5) * 0.008,
                 (Math.random() - 0.5) * 0.008,
@@ -170,17 +304,19 @@
         aGeo.setAttribute('position', new THREE.BufferAttribute(aPos, 3));
         const accentMat = new THREE.PointsMaterial({
             color: isDark ? 0x7c3aed : 0x6d28d9,
-            size: isMobile ? 3 : 3.6,
+            size: isMobile ? 3.0 : 3.6,
+            map: particleTex,
             transparent: true,
-            opacity: isDark ? 0.4 : 0.3,
+            opacity: isDark ? 0.6 : 0.4,
             sizeAttenuation: true,
             blending,
             depthWrite: false,
         });
-        world.add(new THREE.Points(aGeo, accentMat));
+        const accentPoints = new THREE.Points(aGeo, accentMat);
+        midGroup.add(accentPoints);
 
         /* Connection lines */
-        const maxL = PCOUNT * 6;
+        const maxL = MID_PCOUNT * 6;
         const lPos = new Float32Array(maxL * 6);
         const lCol = new Float32Array(maxL * 6);
         const lGeo = new THREE.BufferGeometry();
@@ -190,11 +326,79 @@
         const lineMat = new THREE.LineBasicMaterial({
             vertexColors: true,
             transparent: true,
-            opacity: isDark ? 0.3 : 0.15,
+            opacity: isDark ? 0.35 : 0.18,
             blending,
             depthWrite: false,
         });
-        world.add(new THREE.LineSegments(lGeo, lineMat));
+        midGroup.add(new THREE.LineSegments(lGeo, lineMat));
+
+        /* ═══ 3. FOREGROUND LAYER (Bokeh Particles) ═══ */
+        const FG_PCOUNT = isMobile ? 10 : 25;
+        const FG_SPREAD = 80;
+        const fgPos = new Float32Array(FG_PCOUNT * 3);
+        const fgVel = [];
+        for (let i = 0; i < FG_PCOUNT; i++) {
+            fgPos[i * 3]     = (Math.random() - 0.5) * FG_SPREAD;
+            fgPos[i * 3 + 1] = (Math.random() - 0.5) * FG_SPREAD;
+            fgPos[i * 3 + 2] = 15 - Math.random() * 35;
+            fgVel.push(new THREE.Vector3(
+                (Math.random() - 0.5) * 0.015,
+                (Math.random() - 0.5) * 0.015,
+                (Math.random() - 0.5) * 0.015
+            ));
+        }
+        const fgGeo = new THREE.BufferGeometry();
+        fgGeo.setAttribute('position', new THREE.BufferAttribute(fgPos, 3));
+        const fgPointsMat = new THREE.PointsMaterial({
+            color: isDark ? 0xd946ef : 0xdb2777,
+            size: isMobile ? 4.5 : 6.0,
+            map: particleTex,
+            transparent: true,
+            opacity: isDark ? 0.5 : 0.3,
+            sizeAttenuation: true,
+            blending,
+            depthWrite: false,
+        });
+        const fgPoints = new THREE.Points(fgGeo, fgPointsMat);
+        fgGroup.add(fgPoints);
+
+        /* ═══ 4. NEBULA CLOUDS ═══ */
+        const nebulaMaterials = [];
+        const nebulaPlanes = [];
+        if (!isMobile) {
+            const nebulaColors = isDark ? [0x0044aa, 0x5500aa, 0x440055] : [0xb3d1ff, 0xe1b3ff, 0xffb3e6];
+            const nebulaOpacities = isDark ? [0.18, 0.15, 0.18] : [0.06, 0.05, 0.06];
+            
+            const tex1 = createNebulaTexture(nebulaColors[0], 1.0);
+            const mat1 = new THREE.MeshBasicMaterial({
+                map: tex1, transparent: true, opacity: nebulaOpacities[0], blending, depthWrite: false
+            });
+            nebulaMaterials.push(mat1);
+            const plane1 = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), mat1);
+            plane1.position.set(-25, 10, -50);
+            nebulaGroup.add(plane1);
+            nebulaPlanes.push({ mesh: plane1, rotSpeed: 0.015 });
+
+            const tex2 = createNebulaTexture(nebulaColors[1], 1.0);
+            const mat2 = new THREE.MeshBasicMaterial({
+                map: tex2, transparent: true, opacity: nebulaOpacities[1], blending, depthWrite: false
+            });
+            nebulaMaterials.push(mat2);
+            const plane2 = new THREE.Mesh(new THREE.PlaneGeometry(150, 150), mat2);
+            plane2.position.set(30, -15, -70);
+            nebulaGroup.add(plane2);
+            nebulaPlanes.push({ mesh: plane2, rotSpeed: -0.01 });
+
+            const tex3 = createNebulaTexture(nebulaColors[2], 1.0);
+            const mat3 = new THREE.MeshBasicMaterial({
+                map: tex3, transparent: true, opacity: nebulaOpacities[2], blending, depthWrite: false
+            });
+            nebulaMaterials.push(mat3);
+            const plane3 = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), mat3);
+            plane3.position.set(10, 20, -40);
+            nebulaGroup.add(plane3);
+            nebulaPlanes.push({ mesh: plane3, rotSpeed: 0.02 });
+        }
 
         /* ═══ WIREFRAME GEOMETRIES ═══ */
         const geoMaterials = [];
@@ -212,7 +416,7 @@
             const mesh = new THREE.Mesh(geometry, mat);
             mesh.position.copy(pos);
             mesh.scale.setScalar(scale || 1);
-            world.add(mesh);
+            midGroup.add(mesh);
 
             /* Glow shell */
             const gMat = new THREE.MeshBasicMaterial({
@@ -226,9 +430,26 @@
             const glow = new THREE.Mesh(geometry, gMat);
             glow.position.copy(pos);
             glow.scale.setScalar((scale || 1) * 1.06);
-            world.add(glow);
+            midGroup.add(glow);
 
-            return { mesh, glow };
+            /* Crisp Edges Outline */
+            const edges = new THREE.EdgesGeometry(geometry);
+            const eMat = new THREE.LineBasicMaterial({
+                color: isDark ? hex : hexLight,
+                transparent: true,
+                opacity: (isDark ? darkOp : lightOp) * 1.5,
+                blending,
+                depthWrite: false
+            });
+            eMat.userData = { darkOp: darkOp * 1.5, lightOp: lightOp * 1.5, colorDark: hex, colorLight: hexLight };
+            geoMaterials.push(eMat);
+
+            const line = new THREE.LineSegments(edges, eMat);
+            line.position.copy(pos);
+            line.scale.setScalar(scale || 1);
+            midGroup.add(line);
+
+            return { mesh, glow, line };
         }
 
         const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -255,7 +476,6 @@
         );
 
         let ring2;
-
         if (!isMobile) {
             /* 4. Large flat ring */
             ring2 = makeWire(
@@ -285,7 +505,7 @@
             geoMaterials.push(mat);
 
             const mesh = new THREE.Mesh(orbGeo, mat);
-            world.add(mesh);
+            midGroup.add(mesh);
             orbiters.push({ mesh, angle, speed: 0.35 + i * 0.08, yTilt: 0.5 + i * 0.15 });
         }
 
@@ -306,7 +526,7 @@
                 geoMaterials.push(mat);
 
                 const mesh = new THREE.Mesh(orbGeo, mat);
-                world.add(mesh);
+                midGroup.add(mesh);
                 orbiters2.push({ mesh, angle, speed: 0.5 + i * 0.12 });
             }
         }
@@ -316,9 +536,9 @@
         const sparkPos = new Float32Array(SPARK_COUNT * 3);
         const sparkPhases = [];
         for (let i = 0; i < SPARK_COUNT; i++) {
-            sparkPos[i * 3]     = (Math.random() - 0.5) * SPREAD * 1.2;
-            sparkPos[i * 3 + 1] = (Math.random() - 0.5) * SPREAD * 1.2;
-            sparkPos[i * 3 + 2] = (Math.random() - 0.5) * SPREAD * 1.2;
+            sparkPos[i * 3]     = (Math.random() - 0.5) * MID_SPREAD * 1.2;
+            sparkPos[i * 3 + 1] = (Math.random() - 0.5) * MID_SPREAD * 1.2;
+            sparkPos[i * 3 + 2] = -10 - Math.random() * 40;
             sparkPhases.push(Math.random() * Math.PI * 2);
         }
         const sparkGeo = new THREE.BufferGeometry();
@@ -326,6 +546,7 @@
         const sparkMat = new THREE.PointsMaterial({
             color: 0xffffff,
             size: isMobile ? 1.2 : 1.5,
+            map: particleTex,
             transparent: true,
             opacity: 0,
             sizeAttenuation: true,
@@ -333,10 +554,102 @@
             depthWrite: false,
         });
         const sparkMesh = new THREE.Points(sparkGeo, sparkMat);
-        world.add(sparkMesh);
+        midGroup.add(sparkMesh);
+
+        /* ═══ SHOOTING STARS ═══ */
+        let stars = [];
+        const starCount = isMobile ? 0 : 2;
+        const starGeometry = new THREE.BufferGeometry();
+        const starPositions = new Float32Array(starCount * 6);
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        const starMaterial = new THREE.LineBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const starLines = new THREE.LineSegments(starGeometry, starMaterial);
+        bgGroup.add(starLines);
+
+        for (let i = 0; i < starCount; i++) {
+            stars.push({ active: false, x: 0, y: 0, z: 0, vx: 0, vy: 0, len: 0, life: 0, maxLife: 0 });
+        }
+
+        function spawnStar(star) {
+            star.active = true;
+            star.z = -50 - Math.random() * 20;
+            star.x = (Math.random() - 0.5) * 80;
+            star.y = (Math.random() - 0.2) * 50;
+            star.vx = -1.5 - Math.random() * 1.5;
+            star.vy = -1.0 - Math.random() * 1.0;
+            star.len = 5 + Math.random() * 7;
+            star.life = 0;
+            star.maxLife = 30 + Math.random() * 30;
+        }
+
+        function updateShootingStars() {
+            if (isMobile) return;
+            const pos = starGeometry.attributes.position.array;
+            let activeCount = 0;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = stars[i];
+                if (!star.active && Math.random() < 0.008) {
+                    spawnStar(star);
+                }
+                if (star.active) {
+                    activeCount++;
+                    star.life++;
+                    star.x += star.vx;
+                    star.y += star.vy;
+
+                    const idx = i * 6;
+                    pos[idx] = star.x;
+                    pos[idx+1] = star.y;
+                    pos[idx+2] = star.z;
+
+                    const vLen = Math.sqrt(star.vx * star.vx + star.vy * star.vy);
+                    const dx = (star.vx / vLen) * star.len;
+                    const dy = (star.vy / vLen) * star.len;
+                    pos[idx+3] = star.x - dx;
+                    pos[idx+4] = star.y - dy;
+                    pos[idx+5] = star.z;
+
+                    if (star.life >= star.maxLife) star.active = false;
+                } else {
+                    const idx = i * 6;
+                    pos[idx] = pos[idx+1] = pos[idx+2] = pos[idx+3] = pos[idx+4] = pos[idx+5] = 9999;
+                }
+            }
+
+            if (activeCount > 0) {
+                starGeometry.attributes.position.needsUpdate = true;
+                let maxOpacity = 0;
+                for (let i = 0; i < starCount; i++) {
+                    const star = stars[i];
+                    if (star.active) {
+                        const progress = star.life / star.maxLife;
+                        maxOpacity = Math.max(maxOpacity, Math.sin(progress * Math.PI) * 0.7);
+                    }
+                }
+                starMaterial.opacity = maxOpacity;
+                starMaterial.needsUpdate = true;
+            } else {
+                starMaterial.opacity = 0;
+            }
+        }
 
         /* ═══ STORE REFS ═══ */
-        sceneRefs = { particleMat, accentMat, lineMat, geoMaterials };
+        sceneRefs = {
+            bgPointsMat,
+            midPointsMat,
+            accentMat,
+            fgPointsMat,
+            lineMat,
+            nebulaMaterials,
+            geoMaterials
+        };
 
         /* ── Mouse ── */
         const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -370,20 +683,38 @@
             mouse.x += (mouse.tx - mouse.x) * 0.05;
             mouse.y += (mouse.ty - mouse.y) * 0.05;
 
-            /* ── Move particles ── */
-            const pp = pGeo.attributes.position.array;
-            for (let i = 0; i < PCOUNT; i++) {
-                const ix = i * 3;
-                pp[ix]     += pVel[i].x;
-                pp[ix + 1] += pVel[i].y;
-                pp[ix + 2] += pVel[i].z;
-                if (Math.abs(pp[ix])     > HALF) pVel[i].x *= -1;
-                if (Math.abs(pp[ix + 1]) > HALF) pVel[i].y *= -1;
-                if (Math.abs(pp[ix + 2]) > HALF) pVel[i].z *= -1;
-            }
-            pGeo.attributes.position.needsUpdate = true;
+            /* ── Apply Parallax to Groups ── */
+            if (!isMobile) {
+                bgGroup.position.x += (mouse.x * 2.5 - bgGroup.position.x) * 0.05;
+                bgGroup.position.y += (mouse.y * 1.8 - bgGroup.position.y) * 0.05;
 
-            /* Move accent */
+                nebulaGroup.position.x += (mouse.x * 3.5 - nebulaGroup.position.x) * 0.05;
+                nebulaGroup.position.y += (mouse.y * 2.5 - nebulaGroup.position.y) * 0.05;
+                nebulaPlanes.forEach((np) => {
+                    np.mesh.rotation.z += np.rotSpeed * 0.005;
+                });
+
+                midGroup.position.x += (mouse.x * 6.0 - midGroup.position.x) * 0.05;
+                midGroup.position.y += (mouse.y * 4.2 - midGroup.position.y) * 0.05;
+
+                fgGroup.position.x += (mouse.x * 12.0 - fgGroup.position.x) * 0.05;
+                fgGroup.position.y += (mouse.y * 8.4 - fgGroup.position.y) * 0.05;
+            }
+
+            /* ── Move Mid particles ── */
+            const pp = midGeo.attributes.position.array;
+            for (let i = 0; i < MID_PCOUNT; i++) {
+                const ix = i * 3;
+                pp[ix]     += midVel[i].x;
+                pp[ix + 1] += midVel[i].y;
+                pp[ix + 2] += midVel[i].z;
+                if (Math.abs(pp[ix])     > HALF) midVel[i].x *= -1;
+                if (Math.abs(pp[ix + 1]) > HALF) midVel[i].y *= -1;
+                if (Math.abs(pp[ix + 2] + 27.5) > 12.5) midVel[i].z *= -1;
+            }
+            midGeo.attributes.position.needsUpdate = true;
+
+            /* Move accent particles */
             const ap = aGeo.attributes.position.array;
             for (let i = 0; i < ACOUNT; i++) {
                 const ix = i * 3;
@@ -392,9 +723,22 @@
                 ap[ix + 2] += aVel[i].z;
                 if (Math.abs(ap[ix])     > HALF) aVel[i].x *= -1;
                 if (Math.abs(ap[ix + 1]) > HALF) aVel[i].y *= -1;
-                if (Math.abs(ap[ix + 2]) > HALF) aVel[i].z *= -1;
+                if (Math.abs(ap[ix + 2] + 27.5) > 12.5) aVel[i].z *= -1;
             }
             aGeo.attributes.position.needsUpdate = true;
+
+            /* Move Foreground Bokeh */
+            const fgp = fgGeo.attributes.position.array;
+            for (let i = 0; i < FG_PCOUNT; i++) {
+                const ix = i * 3;
+                fgp[ix]     += fgVel[i].x;
+                fgp[ix + 1] += fgVel[i].y;
+                fgp[ix + 2] += fgVel[i].z;
+                if (Math.abs(fgp[ix])     > 40) fgVel[i].x *= -1;
+                if (Math.abs(fgp[ix + 1]) > 40) fgVel[i].y *= -1;
+                if (Math.abs(fgp[ix + 2] + 2.5) > 17.5) fgVel[i].z *= -1;
+            }
+            fgGeo.attributes.position.needsUpdate = true;
 
             /* ── Lines (every 2 frames) ── */
             if (frame % 2 === 0) {
@@ -404,8 +748,8 @@
                 const dk = document.documentElement.getAttribute('data-theme') !== 'light';
                 const cdistSq = CDIST * CDIST;
 
-                for (let i = 0; i < PCOUNT && idx < maxL; i++) {
-                    for (let j = i + 1; j < PCOUNT && idx < maxL; j++) {
+                for (let i = 0; i < MID_PCOUNT && idx < maxL; i++) {
+                    for (let j = i + 1; j < MID_PCOUNT && idx < maxL; j++) {
                         const dx = pp[i*3]   - pp[j*3];
                         const dy = pp[i*3+1] - pp[j*3+1];
                         const dz = pp[i*3+2] - pp[j*3+2];
@@ -434,39 +778,65 @@
                 lGeo.attributes.color.needsUpdate = true;
             }
 
+            /* Update Shooting Stars */
+            updateShootingStars();
+
+            /* ── Slow HSL Color-shifting for Geometries ── */
+            const dkTheme = document.documentElement.getAttribute('data-theme') !== 'light';
+            geoMaterials.forEach((m) => {
+                if (m.userData.colorDark) {
+                    const baseColor = new THREE.Color(dkTheme ? m.userData.colorDark : m.userData.colorLight);
+                    const hsl = {};
+                    baseColor.getHSL(hsl);
+                    const shiftedHue = (hsl.h + Math.sin(t * 0.15) * 0.05 + 1.0) % 1.0;
+                    m.color.setHSL(shiftedHue, hsl.s, hsl.l);
+                }
+            });
+
             /* ── Geometry rotations ── */
             ico.mesh.rotation.x = t * 0.12;
             ico.mesh.rotation.y = t * 0.18;
             ico.glow.rotation.copy(ico.mesh.rotation);
+            ico.line.rotation.copy(ico.mesh.rotation);
 
             torus.mesh.rotation.x = t * 0.22;
             torus.mesh.rotation.y = t * 0.08;
             torus.glow.rotation.copy(torus.mesh.rotation);
+            torus.line.rotation.copy(torus.mesh.rotation);
 
             oct.mesh.rotation.x = t * 0.18;
             oct.mesh.rotation.z = t * 0.26;
             oct.glow.rotation.copy(oct.mesh.rotation);
+            oct.line.rotation.copy(oct.mesh.rotation);
 
-            if (ring2) { ring2.mesh.rotation.x = Math.PI * 0.35 + t * 0.025; ring2.mesh.rotation.y = t * 0.04; ring2.glow.rotation.copy(ring2.mesh.rotation); }
+            if (ring2) {
+                ring2.mesh.rotation.x = Math.PI * 0.35 + t * 0.025;
+                ring2.mesh.rotation.y = t * 0.04;
+                ring2.glow.rotation.copy(ring2.mesh.rotation);
+                ring2.line.rotation.copy(ring2.mesh.rotation);
+            }
 
             /* ── Bobbing ── */
             const b = (freq, off) => Math.sin(t * freq + off);
-            ico.mesh.position.y   = 10 + b(0.4, 0) * 4;   ico.glow.position.y = ico.mesh.position.y;
-            torus.mesh.position.y = -6 + b(0.35, 1) * 3;   torus.glow.position.y = torus.mesh.position.y;
-            oct.mesh.position.y   = 22 + b(0.5, 2) * 2.5;  oct.glow.position.y = oct.mesh.position.y;
+            ico.mesh.position.y   = 10 + b(0.4, 0) * 4;   ico.glow.position.y = ico.mesh.position.y;   ico.line.position.y = ico.mesh.position.y;
+            torus.mesh.position.y = -6 + b(0.35, 1) * 3;   torus.glow.position.y = torus.mesh.position.y; torus.line.position.y = torus.mesh.position.y;
+            oct.mesh.position.y   = 22 + b(0.5, 2) * 2.5;  oct.glow.position.y = oct.mesh.position.y;  oct.line.position.y = oct.mesh.position.y;
 
             /* ── Breathing / pulsing ── */
             const pulse1 = 1 + b(0.55, 0) * 0.06;
             ico.mesh.scale.setScalar(pulse1);
             ico.glow.scale.setScalar(pulse1 * 1.06);
+            ico.line.scale.setScalar(pulse1);
 
             const pulse2 = 1 + b(0.45, 1.5) * 0.05;
             torus.mesh.scale.setScalar(pulse2);
             torus.glow.scale.setScalar(pulse2 * 1.06);
+            torus.line.scale.setScalar(pulse2);
 
             const pulse3 = 1 + b(0.6, 3) * 0.07;
             oct.mesh.scale.setScalar(pulse3);
             oct.glow.scale.setScalar(pulse3 * 1.06);
+            oct.line.scale.setScalar(pulse3);
 
             /* ── Orbiters around Ico ── */
             const icoP = ico.mesh.position;
@@ -531,6 +901,7 @@
             }, 150);
         });
     }
+
 
     /* ════════════════════════════════════════════════
        3. SCROLL ANIMATIONS
