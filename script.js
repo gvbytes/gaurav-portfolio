@@ -990,8 +990,9 @@
     let physicsBodies = [];
     let physicsFrameId = null;
     let isMouseDown = false;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-    const mousePos = { x: 0, y: 0 };
+    const mousePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     window.addEventListener('mousemove', (e) => {
         mousePos.x = e.clientX + window.scrollX;
         mousePos.y = e.clientY + window.scrollY;
@@ -1007,7 +1008,13 @@
             mousePos.y = e.touches[0].clientY + window.scrollY;
         }
     }, { passive: true });
-    window.addEventListener('touchstart', () => { isMouseDown = true; }, { passive: true });
+    window.addEventListener('touchstart', (e) => {
+        isMouseDown = true;
+        if (e.touches.length > 0) {
+            mousePos.x = e.touches[0].clientX + window.scrollX;
+            mousePos.y = e.touches[0].clientY + window.scrollY;
+        }
+    }, { passive: true });
     window.addEventListener('touchend', () => { isMouseDown = false; }, { passive: true });
 
     function preparePhysicsBodies() {
@@ -1078,13 +1085,13 @@
             }
         }
 
-        // 1. Hero Text (Split by letters for detail)
-        splitText(document.querySelector('.hero-name'), 'letter');
-        splitText(document.querySelector('.hero-tagline'), 'letter');
+        // 1. Hero Text (letters on desktop, words on mobile for performance)
+        splitText(document.querySelector('.hero-name'), isMobile ? 'word' : 'letter');
+        splitText(document.querySelector('.hero-tagline'), isMobile ? 'word' : 'letter');
 
-        // 2. Section Titles (Split by letters)
+        // 2. Section Titles
         document.querySelectorAll('.section-header h2').forEach((h2) => {
-            splitText(h2, 'letter');
+            splitText(h2, isMobile ? 'word' : 'letter');
         });
 
         // 3. Paragraphs, Subtitles & Descriptions (Split by words for legibility and high performance)
@@ -1134,6 +1141,8 @@
         const scrollY = window.scrollY;
         const scrollX = window.scrollX;
         const time = performance.now() * 0.001;
+        const docWidth = document.documentElement.scrollWidth;
+        const docHeight = document.documentElement.scrollHeight;
 
         if (physicsMode === 'blackhole' && vtx) {
             vtx.style.left = `${mousePos.x - scrollX}px`;
@@ -1190,8 +1199,9 @@
                 }
             }
             else if (physicsMode === 'vacuum') {
-                const waveX = Math.sin(time * 0.6 + p.initialY * 0.05) * 0.08;
-                const waveY = Math.cos(time * 0.5 + p.initialX * 0.05) * 0.08;
+                const waveAmp = isMobile ? 0.22 : 0.08;
+                const waveX = Math.sin(time * 0.6 + p.initialY * 0.05) * waveAmp;
+                const waveY = Math.cos(time * 0.5 + p.initialX * 0.05) * waveAmp;
                 p.vx += waveX;
                 p.vy += waveY;
 
@@ -1247,10 +1257,10 @@
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
                 if (dist > 5) {
-                    const pull = 3800 / (dist * dist + 700);
+                    const pull = (isMobile ? 2200 : 3800) / (dist * dist + 700);
                     const ox = -dy / dist;
                     const oy = dx / dist;
-                    const swirl = 5.0;
+                    const swirl = isMobile ? 3.0 : 5.0;
 
                     p.vx += (dx / dist) * pull + ox * swirl;
                     p.vy += (dy / dist) * pull + oy * swirl;
@@ -1263,7 +1273,7 @@
                 p.y += p.vy;
                 p.rotation += 3.0;
 
-                const eventHorizon = 220;
+                const eventHorizon = isMobile ? 120 : 220;
                 if (dist < eventHorizon) {
                     const ratio = dist / eventHorizon;
                     p.scale = ratio;
@@ -1277,6 +1287,14 @@
                     p.scale = 0;
                     p.opacity = 0;
                 }
+
+                /* Boundary containment */
+                const bhX = p.initialX + p.x;
+                const bhY = p.initialY + p.y;
+                if (bhY <= ceilingY) { p.y = ceilingY - p.initialY; p.vy *= -0.3; }
+                else if (bhY + p.height >= floorY) { p.y = floorY - p.initialY - p.height; p.vy *= -0.3; }
+                if (bhX <= leftWallX) { p.x = leftWallX - p.initialX; p.vx *= -0.3; }
+                else if (bhX + p.width >= rightWallX) { p.x = rightWallX - p.initialX - p.width; p.vx *= -0.3; }
             }
             else if (physicsMode === 'explode') {
                 /* Light gravity pulls everything down after the initial burst */
@@ -1322,6 +1340,19 @@
                     p.vx = -p.vx * 0.5;
                 }
             }
+
+            /* Velocity clamp */
+            const maxV = 30;
+            if (p.vx > maxV) p.vx = maxV; else if (p.vx < -maxV) p.vx = -maxV;
+            if (p.vy > maxV) p.vy = maxV; else if (p.vy < -maxV) p.vy = -maxV;
+
+            /* Global document-bounds safety net */
+            const gx = p.initialX + p.x;
+            const gy = p.initialY + p.y;
+            if (gx < 0) { p.x = -p.initialX; p.vx = Math.abs(p.vx) * 0.3; }
+            if (gx + p.width > docWidth) { p.x = docWidth - p.initialX - p.width; p.vx = -Math.abs(p.vx) * 0.3; }
+            if (gy < 0) { p.y = -p.initialY; p.vy = Math.abs(p.vy) * 0.3; }
+            if (gy + p.height > docHeight) { p.y = docHeight - p.initialY - p.height; p.vy = -Math.abs(p.vy) * 0.3; }
 
             p.applyStyles();
         });
@@ -1384,16 +1415,17 @@
                         let dx = px - cx;
                         let dy = py - cy;
                         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-                        const force = 12 + Math.random() * 10;
-                        p.vx = (dx / dist) * force + (Math.random() - 0.5) * 4;
-                        p.vy = (dy / dist) * force - Math.random() * 6;
+                        const force = (isMobile ? 6 : 12) + Math.random() * (isMobile ? 5 : 10);
+                        p.vx = (dx / dist) * force + (Math.random() - 0.5) * (isMobile ? 2 : 4);
+                        p.vy = (dy / dist) * force - Math.random() * (isMobile ? 3 : 6);
                         p.scale = 1;
                         p.opacity = 1;
                     });
                 } else {
+                    const initV = isMobile ? 3 : 6;
                     physicsBodies.forEach((p) => {
-                        p.vx = (Math.random() - 0.5) * 6;
-                        p.vy = (Math.random() - 0.5) * 6;
+                        p.vx = (Math.random() - 0.5) * initV;
+                        p.vy = (Math.random() - 0.5) * initV;
                         p.scale = 1;
                         p.opacity = 1;
                     });
