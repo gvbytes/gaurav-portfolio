@@ -1931,13 +1931,6 @@ body.phy-shake {
     /* Let elements retain their natural display when physics is inactive */
 }
 
-/* Lock viewport when physics is active to prevent mobile page expansion */
-html.phy-active,
-html.phy-active body {
-    overflow: hidden !important;
-    height: 100%;
-}
-
 .phy-active .phy-particle {
     display: inline-block !important;
     will-change: transform, opacity;
@@ -1991,6 +1984,13 @@ html.phy-active body {
 
 /* ── Mobile dock ── */
 @media (max-width: 768px) {
+    /* Lock viewport when physics is active — mobile only */
+    html.phy-active,
+    html.phy-active body {
+        overflow: hidden !important;
+        height: 100%;
+    }
+
     .physics-dock {
         width: calc(100% - 32px);
         left: 16px;
