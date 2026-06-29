@@ -1466,7 +1466,7 @@
         });
 
         // 3. Paragraphs, Subtitles & Descriptions (Split by words for legibility and high performance)
-        document.querySelectorAll('.about-text p, .section-subtitle, .footer-bottom p, .trusthouse-description').forEach((p) => {
+        document.querySelectorAll('.about-text p, .section-subtitle, .footer-bottom p, .trusthouse-description, .cert-description').forEach((p) => {
             splitText(p, 'word');
         });
 
@@ -1486,6 +1486,7 @@
         const cardSelectors = [
             '.project-card',
             '.learning-card',
+            '.cert-card',
             '.trusthouse-card',
             '.social-card',
             '.terminal-window'
