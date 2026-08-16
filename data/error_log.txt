@@ -2,10 +2,10 @@ HTTP Error fetching https://tryhackme.com/api/badges/get/gvbytes: 429 Too Many R
 Response headers: Cache-Control: private, no-store, max-age=0
 Content-Type: text/html; charset=utf-8
 Server: Vercel
-X-Vercel-Challenge-Token: 2.1786842465.60.ZjQ2YzEwZjA0NGQzOGFlNDU0ZWRjOWY4YjQ1ZDRlMTc7Nzg2ZDBlNDU7NTVmZjY2MTdmZTllMmUxYWYwMjYzNmE1NWMwYjhhZTBmZmQ2MmExNzszOxm3Y/LSCJraHhPMnt7P/dDLaMbFv314ZtCEd/0GQZxnpGZPqLDZnzboqWWM0tE=.abec0934c121aeae13f54889c3c52411
-X-Vercel-Id: iad1::1786842465-5AxwClq2or9xIlBDZdKwBzvHwjMot6FH
+X-Vercel-Challenge-Token: 2.1786849003.60.OGM1MjM3ZWFmYTEwM2ZmMWE3ZTY0NDQ2YjZjYTE4ZWY7ZmZlN2QzMGY7ZjU1NDFjYTJjN2ZkMWI3NmI4NDUyOTdlOGE2NmMyZDM5YTUzNjM0NTszO4VKmusA/k/d++/do+N5W23wqBshw17NL+f/6LUq041rNZ4d8a9sW39pZOePDUw=.163e66682149fdb7663656bfaec5b900
+X-Vercel-Id: sfo1::1786849003-ftZHx4qWh2AvpPufLdSDUu6reTF60xe1
 X-Vercel-Mitigated: challenge
-Date: Sun, 16 Aug 2026 01:07:45 GMT
+Date: Sun, 16 Aug 2026 02:56:43 GMT
 Connection: close
 Transfer-Encoding: chunked
 
@@ -15,10 +15,10 @@ HTTP Error fetching https://tryhackme.com/api/user/rank/gvbytes: 429 Too Many Re
 Response headers: Cache-Control: private, no-store, max-age=0
 Content-Type: text/html; charset=utf-8
 Server: Vercel
-X-Vercel-Challenge-Token: 2.1786842465.60.ZjQ2YzEwZjA0NGQzOGFlNDU0ZWRjOWY4YjQ1ZDRlMTc7N2E3ZWI2YTU7Y2U0ZjhkOWQ4N2RhZmM3OGExOGZmYTcwZDhmNjQzNDExYTU5OWZhMTszO3LBg9WWxfc6e7rSQqXuyiZqW/6sT76zXCUB33+ysHf+SNu8P3RRct29hpCAZ5Q=.d6ce1df26ac8eec64685b9e200ac4fda
-X-Vercel-Id: iad1::1786842465-GgT8SCKmBf6sfmNRaB1y04W6eK1AGPqm
+X-Vercel-Challenge-Token: 2.1786849003.60.OGM1MjM3ZWFmYTEwM2ZmMWE3ZTY0NDQ2YjZjYTE4ZWY7NGZlNDk0ZWQ7OTVjODRhOTk1OTE4ZDhjZjA3ZjBhZGZlM2U3MjQzNmUyMzE5NzgxZjszO14AJ/oU1m0B/KTBM2llMAxVQLDWGC3nNq6Xy5GZCoRRBIB4XWpWe5wxEEqC1kk=.24cb33e204af6e9b3e4c2dc66c09b98e
+X-Vercel-Id: sfo1::1786849003-eoz4dLILKSLDfFuSbwNBQrXudxUhLbIH
 X-Vercel-Mitigated: challenge
-Date: Sun, 16 Aug 2026 01:07:45 GMT
+Date: Sun, 16 Aug 2026 02:56:43 GMT
 Connection: close
 Transfer-Encoding: chunked
 
@@ -28,10 +28,10 @@ HTTP Error fetching https://tryhackme.com/api/no-completed-rooms-public/gvbytes:
 Response headers: Cache-Control: private, no-store, max-age=0
 Content-Type: text/html; charset=utf-8
 Server: Vercel
-X-Vercel-Challenge-Token: 2.1786842465.60.ZjQ2YzEwZjA0NGQzOGFlNDU0ZWRjOWY4YjQ1ZDRlMTc7OTdiMzhlZjc7MDc5NmQzOGNkMTI2ZTQ5NmUwZjVjN2I0Njc2NTZjMzcxN2M2OWQ3MzszOxm3Y/LSCJraHhPMnt7P/dDLaMbFv314ZtCEd/0GQZxnpGZPqLDZnzboqWWM0tE=.641462558b3e85a791ebebab52be1ec8
-X-Vercel-Id: iad1::1786842465-98bgpnVf0kBkRTK1BYXSym40k7qyEkMQ
+X-Vercel-Challenge-Token: 2.1786849003.60.OGM1MjM3ZWFmYTEwM2ZmMWE3ZTY0NDQ2YjZjYTE4ZWY7MmJhZTViNTA7NGM3NzdlMjg2Y2RjZTk0ZWM5YThjNjliMDY4NDUzMjVjMWMxM2YwZjszO7QtZayjfRPaj920lJI0I5knGxgYLl2kBf/smNwbcFrnWn/Vzlz+bQ7YVMV5pzg=.40c87d0ba6da3646b0682153cedbddc4
+X-Vercel-Id: sfo1::1786849003-kgc3jp8ivYm2C6iQKO4h4SmmLlz2F7ZQ
 X-Vercel-Mitigated: challenge
-Date: Sun, 16 Aug 2026 01:07:45 GMT
+Date: Sun, 16 Aug 2026 02:56:43 GMT
 Connection: close
 Transfer-Encoding: chunked
 
@@ -41,10 +41,10 @@ HTTP Error fetching https://tryhackme.com/api/all-completed-rooms?username=gvbyt
 Response headers: Cache-Control: private, no-store, max-age=0
 Content-Type: text/html; charset=utf-8
 Server: Vercel
-X-Vercel-Challenge-Token: 2.1786842465.60.ZjQ2YzEwZjA0NGQzOGFlNDU0ZWRjOWY4YjQ1ZDRlMTc7YjFmMmY4NTI7MjBlMDE4MGQxMjEwNTg1YWYxYTUxMTU2YTA2NzQxMDNhNzBhNjFhMzszO/gipvqSlC0RGSjgET94ku8MErtgeEqm2XVmTG7Q4kit7cLD72oPXiYcCu6Hysk=.a3c107dcd2211a109057983670be5a39
-X-Vercel-Id: iad1::1786842465-zEeVnpjZh74R7Lt54NdXa3OAHHlmUMJ0
+X-Vercel-Challenge-Token: 2.1786849003.60.OGM1MjM3ZWFmYTEwM2ZmMWE3ZTY0NDQ2YjZjYTE4ZWY7MGY0NGJjMjc7NTlkYjc4N2NmZDNlM2I5OTNkNjhlZTllZTAzZjBiOGM4ODU0NmZlMDszO8SydvDJKgkEMoAQ6Kh0dj6/1+jqqMw/dOjPx8nmzEpNADOjBphXgrwReoq0Z9U=.e3c34708cd077944952c1d66b20cab39
+X-Vercel-Id: sfo1::1786849003-mpsUjVZfUbYKwzyJyHXXQ8SiPCyFidIc
 X-Vercel-Mitigated: challenge
-Date: Sun, 16 Aug 2026 01:07:45 GMT
+Date: Sun, 16 Aug 2026 02:56:43 GMT
 Connection: close
 Transfer-Encoding: chunked
 
