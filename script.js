@@ -1,6 +1,6 @@
 /**
- * GVBYTES.COM — Authentic 16-Bit Voxel Sky-Isle Engine
- * Fully client-side, responsive, zero-lag WebGL & Interactive Physics
+ * GVBYTES.COM — Real DOM Text Physics Engine & 3D Voxel Background
+ * Zero purple gradients • Authentic Physics • Dynamic Live Feeds
  */
 
 (function () {
@@ -64,28 +64,25 @@
     /* ==========================================================================
        THEME TOGGLE
        ========================================================================== */
-    function initTheme() {
-        const toggle = document.getElementById('theme-toggle');
-        if (!toggle) return;
+    function initThemeToggle() {
+        const btn = document.getElementById('theme-toggle');
+        if (!btn) return;
 
         const saved = localStorage.getItem('gv-theme') || 'dark';
         document.documentElement.setAttribute('data-theme', saved);
 
-        toggle.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
+        btn.addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-theme');
+            const next = cur === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('gv-theme', next);
         });
     }
 
     /* ==========================================================================
-       3D VOXEL SKY-ISLE DIORAMA & GRAVITY ENGINE
+       3D VOXEL SKY-ISLE DIORAMA BACKGROUND
        ========================================================================== */
-    let physicsMode = 'normal';
-    let sceneRefs = null;
-
-    function init3DScene() {
+    function init3DVoxelScene() {
         const canvas = document.getElementById('hero-canvas');
         if (!canvas || !window.THREE) return;
 
@@ -100,15 +97,14 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Master Diorama Island Group
         const diorama = new THREE.Group();
         scene.add(diorama);
-        diorama.position.set(isMobile ? 0 : 7.5, 0.5, 0);
+        diorama.position.set(isMobile ? 0 : 7.2, 0.5, 0);
 
         const vSize = 0.45;
         const vGeo = new THREE.BoxGeometry(vSize, vSize, vSize);
 
-        // Voxel Materials (Zero purple!)
+        // Voxel materials (No purple!)
         const mGrass = new THREE.MeshBasicMaterial({ color: 0x10b981 });
         const mDirt = new THREE.MeshBasicMaterial({ color: 0x27272a });
         const mStone = new THREE.MeshBasicMaterial({ color: 0x52525b });
@@ -118,7 +114,7 @@
         const mTrunk = new THREE.MeshBasicMaterial({ color: 0x78350f });
         const mWater = new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.85 });
 
-        // 1. Build Stepped Voxel Island Base
+        // Island base
         const radius = 6;
         for (let x = -radius; x <= radius; x++) {
             for (let z = -radius; z <= radius; z++) {
@@ -136,7 +132,7 @@
             }
         }
 
-        // 2. Build Miniature Voxel Pine Tree
+        // Voxel Pine Tree
         const treeX = -2 * vSize;
         const treeZ = -1 * vSize;
         for (let y = 1; y <= 3; y++) {
@@ -155,7 +151,7 @@
             }
         }
 
-        // 3. Build Voxel Mountain Peak
+        // Voxel Mountain Peak
         for (let my = 1; my <= 4; my++) {
             const pR = 4 - my;
             for (let px = -pR; px <= pR; px++) {
@@ -169,11 +165,10 @@
             }
         }
 
-        // 4. Orbiting Miniature Voxel Moon & Voxel Cloud
+        // Orbiting Moon & Cloud
         const orbitRig = new THREE.Group();
         diorama.add(orbitRig);
 
-        // Voxel Moon
         const moonRig = new THREE.Group();
         for (let mx = -1; mx <= 1; mx++) {
             for (let my = -1; my <= 1; my++) {
@@ -189,7 +184,6 @@
         moonRig.position.set(4.5, 3.5, 0);
         orbitRig.add(moonRig);
 
-        // Voxel Cloud
         const cloudRig = new THREE.Group();
         for (let cx = -2; cx <= 2; cx++) {
             for (let cz = -1; cz <= 1; cz++) {
@@ -201,28 +195,6 @@
         cloudRig.position.set(-4.5, 2.8, 0);
         orbitRig.add(cloudRig);
 
-        // 5. Floating Ambient Voxel Stars with Gravity Physics
-        const starCount = 140;
-        const stars = [];
-        for (let i = 0; i < starCount; i++) {
-            const s = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.18), Math.random() > 0.5 ? mGold : mWhite);
-            const origPos = new THREE.Vector3(
-                (Math.random() - 0.5) * 45,
-                (Math.random() - 0.5) * 35,
-                (Math.random() - 0.5) * 25
-            );
-            s.position.copy(origPos);
-            scene.add(s);
-            stars.push({
-                mesh: s,
-                origPos: origPos.clone(),
-                velocity: new THREE.Vector3()
-            });
-        }
-
-        sceneRefs = { diorama, orbitRig, cloudRig, stars };
-
-        // Mouse Parallax
         let mouseX = 0, mouseY = 0;
         window.addEventListener('mousemove', (e) => {
             mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -240,36 +212,12 @@
             requestAnimationFrame(animate);
             time += 0.015;
 
-            // Island Idle Breathing
             diorama.position.y = 0.5 + Math.sin(time) * 0.25;
             diorama.rotation.y = time * 0.15 + mouseX * 0.3;
             diorama.rotation.x = 0.25 - mouseY * 0.2;
 
             orbitRig.rotation.y = time * 0.3;
             cloudRig.rotation.y += 0.01;
-
-            // Physics Dock Simulation Modes
-            stars.forEach((s, idx) => {
-                if (physicsMode === 'gravity') {
-                    s.mesh.position.y -= 0.15;
-                    if (s.mesh.position.y < -15) s.mesh.position.y = 15;
-                } else if (physicsMode === 'vacuum') {
-                    s.mesh.position.y += 0.15;
-                    if (s.mesh.position.y > 15) s.mesh.position.y = -15;
-                } else if (physicsMode === 'blackhole') {
-                    const dist = s.mesh.position.length();
-                    s.mesh.position.x -= (s.mesh.position.x / dist) * 0.2;
-                    s.mesh.position.y -= (s.mesh.position.y / dist) * 0.2;
-                    s.mesh.position.z -= (s.mesh.position.z / dist) * 0.2;
-                    if (dist < 2) s.mesh.position.copy(s.origPos);
-                } else if (physicsMode === 'explode') {
-                    s.mesh.position.x += (Math.random() - 0.5) * 0.8;
-                    s.mesh.position.y += (Math.random() - 0.5) * 0.8;
-                } else {
-                    // Normal gentle drift
-                    s.mesh.position.y = s.origPos.y + Math.sin(time + idx) * 0.8;
-                }
-            });
 
             camera.position.x += (mouseX * 2 - camera.position.x) * 0.04;
             camera.position.y += (8 - mouseY * 2 - camera.position.y) * 0.04;
@@ -280,25 +228,486 @@
         animate();
     }
 
-    function initPhysicsDock() {
-        const dock = document.getElementById('physics-dock');
-        if (!dock) return;
+    /* ==========================================================================
+       AUTHENTIC DOM TEXT PHYSICS ENGINE (GRAVITY / VACUUM / BLACKHOLE / EXPLODE)
+       ========================================================================== */
+    class PhysicsBody {
+        constructor(element, type, container) {
+            this.element = element;
+            this.type = type;
+            this.container = container || element.closest('section, footer, #hero') || document.body;
+            this.x = 0;
+            this.y = 0;
+            this.vx = 0;
+            this.vy = 0;
+            this.rotation = 0;
+            this.vrotation = 0;
+            this.scale = 1;
+            this.opacity = 1;
 
-        dock.querySelectorAll('.dock-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const mode = btn.getAttribute('data-mode');
-                if (mode) {
-                    physicsMode = mode;
-                    dock.querySelectorAll('.dock-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                } else if (btn.id === 'btn-reset') {
-                    physicsMode = 'normal';
-                    dock.querySelectorAll('.dock-btn').forEach(b => b.classList.remove('active'));
-                    if (sceneRefs && sceneRefs.stars) {
-                        sceneRefs.stars.forEach(s => s.mesh.position.copy(s.origPos));
+            this.width = 0;
+            this.height = 0;
+            this.initialX = 0;
+            this.initialY = 0;
+            this.floorY = 0;
+            this.ceilingY = 0;
+            this.leftWallX = 0;
+            this.rightWallX = 0;
+        }
+
+        initLayout(containerCache) {
+            const r = this.element.getBoundingClientRect();
+            this.width = r.width;
+            this.height = r.height;
+            this.initialX = r.left + window.scrollX;
+            this.initialY = r.top + window.scrollY;
+            this.updateContainerBounds(containerCache);
+        }
+
+        updateContainerBounds(containerCache) {
+            let r;
+            if (containerCache && containerCache.has(this.container)) {
+                r = containerCache.get(this.container);
+            } else {
+                r = this.container.getBoundingClientRect();
+                if (containerCache) containerCache.set(this.container, r);
+            }
+            const scrollY = window.scrollY;
+            const scrollX = window.scrollX;
+            this.floorY = r.bottom + scrollY - 30;
+            this.ceilingY = r.top + scrollY + 15;
+            this.leftWallX = r.left + scrollX + 15;
+            this.rightWallX = r.right + scrollX - 15;
+        }
+
+        updateRect() {
+            const prevTransform = this.element.style.transform;
+            this.element.style.transform = '';
+            const r = this.element.getBoundingClientRect();
+            this.width = r.width;
+            this.height = r.height;
+            this.initialX = r.left + window.scrollX;
+            this.initialY = r.top + window.scrollY;
+            this.element.style.transform = prevTransform;
+        }
+
+        reset() {
+            this.x = 0;
+            this.y = 0;
+            this.vx = 0;
+            this.vy = 0;
+            this.rotation = 0;
+            this.vrotation = 0;
+            this.scale = 1;
+            this.opacity = 1;
+            this.element.classList.add('resetting');
+            this.applyStyles();
+            setTimeout(() => {
+                this.element.classList.remove('resetting');
+                this.element.style.transform = '';
+                this.element.style.opacity = '';
+            }, 800);
+        }
+
+        applyStyles() {
+            this.element.style.transform = `translate3d(${this.x}px, ${this.y}px, 0) rotate(${this.rotation}deg) scale(${this.scale})`;
+            this.element.style.opacity = this.opacity;
+        }
+    }
+
+    let physicsActive = false;
+    let physicsMode = null;
+    let physicsBodies = [];
+    let physicsFrameId = null;
+    let isMouseDown = false;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+    const mousePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    window.addEventListener('mousemove', (e) => {
+        mousePos.x = e.clientX + window.scrollX;
+        mousePos.y = e.clientY + window.scrollY;
+    }, { passive: true });
+    window.addEventListener('mousedown', () => { isMouseDown = true; });
+    window.addEventListener('mouseup', () => { isMouseDown = false; });
+
+    function preparePhysicsBodies() {
+        const bodies = [];
+
+        function splitText(el, splitType = 'letter') {
+            if (!el) return;
+            if (el.dataset.physicsProcessed) return;
+            el.dataset.physicsProcessed = 'true';
+
+            const lines = el.innerHTML.split(/<br\s*\/?>/i);
+            el.innerHTML = '';
+
+            lines.forEach((lineHtml) => {
+                const lineContainer = document.createElement('span');
+                lineContainer.style.display = 'block';
+                lineContainer.className = 'phy-line-container';
+
+                const temp = document.createElement('div');
+                temp.innerHTML = lineHtml.trim();
+
+                processNode(temp, lineContainer);
+                el.appendChild(lineContainer);
+            });
+
+            function processNode(node, container) {
+                Array.from(node.childNodes).forEach((child) => {
+                    if (child.nodeType === Node.TEXT_NODE) {
+                        const text = child.textContent;
+                        const words = text.split(/(\s+)/);
+                        words.forEach((chunk) => {
+                            if (chunk.trim().length === 0) {
+                                if (chunk.length > 0) {
+                                    const space = document.createElement('span');
+                                    space.className = 'phy-space';
+                                    space.textContent = ' ';
+                                    container.appendChild(space);
+                                }
+                            } else {
+                                if (splitType === 'letter') {
+                                    const wordSpan = document.createElement('span');
+                                    wordSpan.className = 'phy-word';
+
+                                    Array.from(chunk).forEach((char) => {
+                                        const span = document.createElement('span');
+                                        span.className = 'phy-particle';
+                                        span.textContent = char;
+                                        wordSpan.appendChild(span);
+                                        bodies.push(new PhysicsBody(span, 'letter', el));
+                                    });
+                                    container.appendChild(wordSpan);
+                                } else {
+                                    const span = document.createElement('span');
+                                    span.className = 'phy-particle';
+                                    span.textContent = chunk;
+                                    container.appendChild(span);
+                                    bodies.push(new PhysicsBody(span, 'word', el));
+                                }
+                            }
+                        });
+                    } else if (child.nodeType === Node.ELEMENT_NODE) {
+                        const cloned = child.cloneNode(false);
+                        cloned.classList.add('phy-cloned-wrapper');
+                        container.appendChild(cloned);
+                        processNode(child, cloned);
+                    }
+                });
+            }
+        }
+
+        splitText(document.querySelector('.hero-name'), isMobile ? 'word' : 'letter');
+        splitText(document.querySelector('.hero-tagline'), isMobile ? 'word' : 'letter');
+
+        document.querySelectorAll('.section-header h2').forEach((h2) => {
+            splitText(h2, isMobile ? 'word' : 'letter');
+        });
+
+        document.querySelectorAll('.about-text p, .section-subtitle, .footer-bottom p, .cert-description').forEach((p) => {
+            splitText(p, 'word');
+        });
+
+        const badgeEl = document.querySelector('.hero-badge');
+        if (badgeEl) {
+            badgeEl.classList.add('phy-particle');
+            bodies.push(new PhysicsBody(badgeEl, 'badge'));
+        }
+
+        document.querySelectorAll('.hero-cta a').forEach((btn) => {
+            btn.classList.add('phy-particle');
+            bodies.push(new PhysicsBody(btn, 'button'));
+        });
+
+        const cardSelectors = ['.project-card', '.learning-card', '.cert-card', '.social-card', '.terminal-window', '.milestone-card'];
+        cardSelectors.forEach((selector) => {
+            document.querySelectorAll(selector).forEach((card) => {
+                card.classList.add('phy-particle');
+                bodies.push(new PhysicsBody(card, 'card'));
+            });
+        });
+
+        const containerCache = new Map();
+        bodies.forEach((b) => b.initLayout(containerCache));
+        return bodies;
+    }
+
+    function runPhysicsLoop() {
+        if (!physicsActive) return;
+
+        const vtx = document.getElementById('black-hole-vortex');
+        const scrollY = window.scrollY;
+        const scrollX = window.scrollX;
+        const time = performance.now() * 0.001;
+        const docWidth = document.documentElement.scrollWidth;
+        const docHeight = document.documentElement.scrollHeight;
+
+        if (physicsMode === 'blackhole' && vtx) {
+            vtx.style.left = `${mousePos.x - scrollX}px`;
+            vtx.style.top = `${mousePos.y - scrollY}px`;
+        }
+
+        physicsBodies.forEach((p) => {
+            const floorY = p.floorY;
+            const ceilingY = p.ceilingY;
+            const leftWallX = p.leftWallX;
+            const rightWallX = p.rightWallX;
+
+            const absX = p.initialX + p.x;
+            const absY = p.initialY + p.y;
+
+            if (physicsMode === 'gravity') {
+                p.vy += 0.28;
+                p.vx *= 0.98;
+
+                const dx = (absX + p.width / 2) - mousePos.x;
+                const dy = (absY + p.height / 2) - mousePos.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const pushRadius = 150;
+                if (dist < pushRadius) {
+                    const force = (1 - dist / pushRadius) * 3.5;
+                    p.vx += (dx / dist) * force;
+                    p.vy += (dy / dist) * force;
+                    p.vrotation = (Math.random() - 0.5) * force * 15;
+                }
+
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rotation += p.vrotation;
+                p.vrotation *= 0.97;
+
+                const bottomY = p.initialY + p.y + p.height;
+                if (bottomY >= floorY) {
+                    p.y = floorY - p.initialY - p.height;
+                    p.vy = -p.vy * 0.55;
+                    p.vx *= 0.8;
+                    p.vrotation = (Math.random() - 0.5) * p.vy * 5;
+                    if (Math.abs(p.vy) < 0.2) p.vy = 0;
+                }
+
+                if (absX <= leftWallX) {
+                    p.x = leftWallX - p.initialX;
+                    p.vx = -p.vx * 0.6;
+                } else if (absX + p.width >= rightWallX) {
+                    p.x = rightWallX - p.initialX - p.width;
+                    p.vx = -p.vx * 0.6;
+                }
+            } else if (physicsMode === 'vacuum') {
+                const waveAmp = isMobile ? 0.22 : 0.08;
+                const waveX = Math.sin(time * 0.6 + p.initialY * 0.05) * waveAmp;
+                const waveY = Math.cos(time * 0.5 + p.initialX * 0.05) * waveAmp;
+                p.vx += waveX;
+                p.vy += waveY;
+
+                const dx = mousePos.x - (absX + p.width / 2);
+                const dy = mousePos.y - (absY + p.height / 2);
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (isMouseDown) {
+                    const maxSuctionDist = 450;
+                    if (dist > 10 && dist < maxSuctionDist) {
+                        const force = (1 - dist / maxSuctionDist) * 1.5;
+                        p.vx += (dx / dist) * force;
+                        p.vy += (dy / dist) * force;
+                    }
+                } else {
+                    const maxSuctionDist = 200;
+                    if (dist < maxSuctionDist) {
+                        const force = (1 - dist / maxSuctionDist) * 0.15;
+                        p.vx += (dx / dist) * force;
+                        p.vy += (dy / dist) * force;
                     }
                 }
+
+                p.vx *= 0.96;
+                p.vy *= 0.96;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rotation += p.vx * 1.2;
+
+                const currentAbsX = p.initialX + p.x;
+                const currentAbsY = p.initialY + p.y;
+                
+                if (currentAbsY <= ceilingY) { p.y = ceilingY - p.initialY; p.vy *= -0.7; }
+                else if (currentAbsY + p.height >= floorY) { p.y = floorY - p.initialY - p.height; p.vy *= -0.7; }
+
+                if (currentAbsX <= leftWallX) { p.x = leftWallX - p.initialX; p.vx *= -0.7; }
+                else if (currentAbsX + p.width >= rightWallX) { p.x = rightWallX - p.initialX - p.width; p.vx *= -0.7; }
+            } else if (physicsMode === 'blackhole') {
+                const dx = mousePos.x - (absX + p.width / 2);
+                const dy = mousePos.y - (absY + p.height / 2);
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > 5) {
+                    const pull = (isMobile ? 2200 : 3800) / (dist * dist + 700);
+                    const ox = -dy / dist;
+                    const oy = dx / dist;
+                    const swirl = isMobile ? 3.0 : 5.0;
+
+                    p.vx += (dx / dist) * pull + ox * swirl;
+                    p.vy += (dy / dist) * pull + oy * swirl;
+                }
+
+                p.vx *= 0.93;
+                p.vy *= 0.93;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rotation += 3.0;
+
+                const eventHorizon = isMobile ? 120 : 220;
+                if (dist < eventHorizon) {
+                    const ratio = dist / eventHorizon;
+                    p.scale = ratio;
+                    p.opacity = ratio;
+                } else {
+                    p.scale = 1;
+                    p.opacity = 1;
+                }
+
+                if (dist < 15) {
+                    p.scale = 0;
+                    p.opacity = 0;
+                }
+            } else if (physicsMode === 'explode') {
+                p.vy += 0.15;
+                p.vx *= 0.985;
+
+                const dx = (absX + p.width / 2) - mousePos.x;
+                const dy = (absY + p.height / 2) - mousePos.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const pushRadius = 180;
+                if (dist < pushRadius) {
+                    const force = (1 - dist / pushRadius) * 4.5;
+                    p.vx += (dx / dist) * force;
+                    p.vy += (dy / dist) * force;
+                }
+
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rotation += (p.vx + p.vy) * 1.5;
+
+                const bottomY = p.initialY + p.y + p.height;
+                if (bottomY >= floorY) {
+                    p.y = floorY - p.initialY - p.height;
+                    p.vy = -p.vy * 0.4;
+                    p.vx *= 0.7;
+                    if (Math.abs(p.vy) < 0.3) p.vy = 0;
+                }
+
+                if (p.initialY + p.y <= ceilingY) { p.y = ceilingY - p.initialY; p.vy = -p.vy * 0.4; }
+                if (absX <= leftWallX) { p.x = leftWallX - p.initialX; p.vx = -p.vx * 0.5; }
+                else if (absX + p.width >= rightWallX) { p.x = rightWallX - p.initialX - p.width; p.vx = -p.vx * 0.5; }
+            }
+
+            const maxV = 30;
+            if (p.vx > maxV) p.vx = maxV; else if (p.vx < -maxV) p.vx = -maxV;
+            if (p.vy > maxV) p.vy = maxV; else if (p.vy < -maxV) p.vy = -maxV;
+
+            p.applyStyles();
+        });
+
+        physicsFrameId = requestAnimationFrame(runPhysicsLoop);
+    }
+
+    function initTextPhysics() {
+        const dock = document.getElementById('physics-dock');
+        const vtx = document.getElementById('black-hole-vortex');
+        if (!dock) return;
+
+        const btns = dock.querySelectorAll('.dock-btn[data-mode]');
+        const resetBtn = document.getElementById('btn-reset');
+
+        function ensureBodies() {
+            if (physicsBodies.length === 0) {
+                physicsBodies = preparePhysicsBodies();
+            }
+        }
+
+        btns.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const mode = btn.getAttribute('data-mode');
+                ensureBodies();
+
+                if (btn.classList.contains('active')) {
+                    deactivatePhysics();
+                    return;
+                }
+
+                btns.forEach((b) => b.classList.remove('active'));
+                btn.classList.add('active');
+                physicsMode = mode;
+                physicsActive = true;
+                document.body.classList.add('phy-active');
+                document.documentElement.classList.add('phy-active');
+
+                document.body.classList.remove('phy-shake');
+                void document.body.offsetWidth;
+                document.body.classList.add('phy-shake');
+                setTimeout(() => document.body.classList.remove('phy-shake'), 400);
+
+                if (vtx) {
+                    vtx.classList.toggle('active', mode === 'blackhole');
+                }
+
+                if (mode === 'explode') {
+                    const cx = window.innerWidth / 2 + window.scrollX;
+                    const cy = window.innerHeight / 2 + window.scrollY;
+                    physicsBodies.forEach((p) => {
+                        const px = p.initialX + p.x + p.width / 2;
+                        const py = p.initialY + p.y + p.height / 2;
+                        let dx = px - cx;
+                        let dy = py - cy;
+                        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                        const force = (isMobile ? 6 : 12) + Math.random() * (isMobile ? 5 : 10);
+                        p.vx = (dx / dist) * force + (Math.random() - 0.5) * (isMobile ? 2 : 4);
+                        p.vy = (dy / dist) * force - Math.random() * (isMobile ? 3 : 6);
+                        p.scale = 1;
+                        p.opacity = 1;
+                    });
+                } else {
+                    const initV = isMobile ? 3 : 6;
+                    physicsBodies.forEach((p) => {
+                        p.vx = (Math.random() - 0.5) * initV;
+                        p.vy = (Math.random() - 0.5) * initV;
+                        p.scale = 1;
+                        p.opacity = 1;
+                    });
+                }
+
+                cancelAnimationFrame(physicsFrameId);
+                runPhysicsLoop();
             });
+        });
+
+        if (resetBtn) {
+            resetBtn.addEventListener('click', deactivatePhysics);
+        }
+
+        function deactivatePhysics() {
+            btns.forEach((b) => b.classList.remove('active'));
+            physicsActive = false;
+            physicsMode = null;
+            document.body.classList.remove('phy-active');
+            document.documentElement.classList.remove('phy-active');
+            if (vtx) vtx.classList.remove('active');
+
+            cancelAnimationFrame(physicsFrameId);
+            document.body.classList.add('phy-resetting');
+            physicsBodies.forEach((p) => p.reset());
+            setTimeout(() => {
+                document.body.classList.remove('phy-resetting');
+            }, 800);
+        }
+
+        window.addEventListener('resize', () => {
+            if (physicsBodies.length > 0) {
+                const containerCache = new Map();
+                physicsBodies.forEach((p) => {
+                    p.updateRect();
+                    p.updateContainerBounds(containerCache);
+                });
+            }
         });
     }
 
@@ -309,20 +718,24 @@
         const container = document.getElementById('projects-container');
         if (!container) return;
 
-        // Render Featured Projects
-        let html = FEATURED_PROJECTS.map(p => `
+        let html = '<div class="projects-grid">';
+        html += FEATURED_PROJECTS.map(p => `
             <div class="project-card">
-                <span class="project-badge pixel">${p.badge}</span>
-                <h3 class="pixel">${p.name}</h3>
+                <span class="project-badge">${p.badge}</span>
+                <h3>${p.name}</h3>
                 <p>${p.description}</p>
-                <div class="project-tags pixel">
+                <div class="project-tags">
                     ${p.tags.map(t => `<span class="project-tag">${t}</span>`).join('')}
                 </div>
                 <div class="project-links">
-                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="project-link pixel">View Project</a>
+                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="project-link">
+                        View Project
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+                    </a>
                 </div>
             </div>
         `).join('');
+        html += '</div>';
 
         container.innerHTML = html;
 
@@ -333,22 +746,26 @@
                 const repos = await res.json();
                 const filtered = repos.filter(r => !r.fork && !EXCLUDE_REPOS.includes(r.name) && !FEATURED_PROJECTS.some(fp => fp.name.toLowerCase() === r.name.toLowerCase())).slice(0, 4);
 
+                const grid = container.querySelector('.projects-grid');
                 filtered.forEach(repo => {
                     const card = `
                         <div class="project-card">
-                            <span class="project-badge pixel">GITHUB REPO</span>
-                            <h3 class="pixel">${repo.name}</h3>
+                            <span class="project-badge">GITHUB REPO</span>
+                            <h3>${repo.name}</h3>
                             <p>${repo.description || 'Open source project by Gaurav Verma.'}</p>
-                            <div class="project-tags pixel">
+                            <div class="project-tags">
                                 <span class="project-tag">${repo.language || 'Code'}</span>
                                 <span class="project-tag">★ ${repo.stargazers_count}</span>
                             </div>
                             <div class="project-links">
-                                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link pixel">GitHub</a>
+                                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link">
+                                    GitHub
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+                                </a>
                             </div>
                         </div>
                     `;
-                    container.insertAdjacentHTML('beforeend', card);
+                    grid.insertAdjacentHTML('beforeend', card);
                 });
             }
         } catch (e) {}
@@ -413,11 +830,11 @@
 
     // Initialize on DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
-        initTheme();
-        init3DScene();
-        initPhysicsDock();
+        initThemeToggle();
+        init3DVoxelScene();
         renderProjects();
         loadStats();
+        initTextPhysics();
         initBackToTop();
     });
 
