@@ -1,6 +1,6 @@
 /**
- * GVBYTES.COM — Real DOM Text Physics Engine & 3D Voxel Background
- * Zero purple gradients • Authentic Physics • Dynamic Live Feeds
+ * GVBYTES.COM — Unified 16-Bit Voxel Sky-Isle Diorama & Real DOM Text Physics Engine
+ * Zero purple gradients • Sleek Terminal • Interactive 3D Biome Controls
  */
 
 (function () {
@@ -80,8 +80,10 @@
     }
 
     /* ==========================================================================
-       3D VOXEL SKY-ISLE DIORAMA BACKGROUND
+       3D VOXEL SKY-ISLE DIORAMA BACKGROUND & WEATHER CONTROLLER
        ========================================================================== */
+    let dioramaMaterials = {};
+
     function init3DVoxelScene() {
         const canvas = document.getElementById('hero-canvas');
         if (!canvas || !window.THREE) return;
@@ -105,14 +107,14 @@
         const vGeo = new THREE.BoxGeometry(vSize, vSize, vSize);
 
         // Voxel materials (No purple!)
-        const mGrass = new THREE.MeshBasicMaterial({ color: 0x10b981 });
-        const mDirt = new THREE.MeshBasicMaterial({ color: 0x27272a });
-        const mStone = new THREE.MeshBasicMaterial({ color: 0x52525b });
-        const mGold = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
-        const mWhite = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        const mTree = new THREE.MeshBasicMaterial({ color: 0x059669 });
-        const mTrunk = new THREE.MeshBasicMaterial({ color: 0x78350f });
-        const mWater = new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.85 });
+        dioramaMaterials.mGrass = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+        dioramaMaterials.mDirt = new THREE.MeshBasicMaterial({ color: 0x27272a });
+        dioramaMaterials.mStone = new THREE.MeshBasicMaterial({ color: 0x52525b });
+        dioramaMaterials.mGold = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+        dioramaMaterials.mWhite = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        dioramaMaterials.mTree = new THREE.MeshBasicMaterial({ color: 0x059669 });
+        dioramaMaterials.mTrunk = new THREE.MeshBasicMaterial({ color: 0x78350f });
+        dioramaMaterials.mWater = new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.85 });
 
         // Island base
         const radius = 6;
@@ -122,8 +124,8 @@
                 if (dist <= radius) {
                     const depth = Math.floor((radius - dist) * 0.8) + 1;
                     for (let y = 0; y >= -depth; y--) {
-                        let mat = (y === 0) ? mGrass : ((y === -depth) ? mStone : mDirt);
-                        if (x === 3 && y === 0) mat = mWater;
+                        let mat = (y === 0) ? dioramaMaterials.mGrass : ((y === -depth) ? dioramaMaterials.mStone : dioramaMaterials.mDirt);
+                        if (x === 3 && y === 0) mat = dioramaMaterials.mWater;
                         const block = new THREE.Mesh(vGeo, mat);
                         block.position.set(x * vSize, y * vSize, z * vSize);
                         diorama.add(block);
@@ -136,7 +138,7 @@
         const treeX = -2 * vSize;
         const treeZ = -1 * vSize;
         for (let y = 1; y <= 3; y++) {
-            const trunk = new THREE.Mesh(vGeo, mTrunk);
+            const trunk = new THREE.Mesh(vGeo, dioramaMaterials.mTrunk);
             trunk.position.set(treeX, y * vSize, treeZ);
             diorama.add(trunk);
         }
@@ -144,7 +146,7 @@
             for (let fz = -1; fz <= 1; fz++) {
                 for (let fy = 4; fy <= 6; fy++) {
                     if (fy === 6 && (Math.abs(fx) + Math.abs(fz) > 0)) continue;
-                    const leaf = new THREE.Mesh(vGeo, mTree);
+                    const leaf = new THREE.Mesh(vGeo, dioramaMaterials.mTree);
                     leaf.position.set(treeX + fx * vSize, fy * vSize, treeZ + fz * vSize);
                     diorama.add(leaf);
                 }
@@ -157,7 +159,7 @@
             for (let px = -pR; px <= pR; px++) {
                 for (let pz = -pR; pz <= pR; pz++) {
                     if (Math.abs(px) + Math.abs(pz) <= pR) {
-                        const rock = new THREE.Mesh(vGeo, my === 4 ? mWhite : mStone);
+                        const rock = new THREE.Mesh(vGeo, my === 4 ? dioramaMaterials.mWhite : dioramaMaterials.mStone);
                         rock.position.set((px + 2) * vSize, my * vSize, (pz + 1) * vSize);
                         diorama.add(rock);
                     }
@@ -174,7 +176,7 @@
             for (let my = -1; my <= 1; my++) {
                 for (let mz = -1; mz <= 1; mz++) {
                     if (Math.abs(mx) + Math.abs(my) + Math.abs(mz) <= 2) {
-                        const mB = new THREE.Mesh(vGeo, mGold);
+                        const mB = new THREE.Mesh(vGeo, dioramaMaterials.mGold);
                         mB.position.set(mx * vSize, my * vSize, mz * vSize);
                         moonRig.add(mB);
                     }
@@ -187,7 +189,7 @@
         const cloudRig = new THREE.Group();
         for (let cx = -2; cx <= 2; cx++) {
             for (let cz = -1; cz <= 1; cz++) {
-                const cB = new THREE.Mesh(vGeo, mWhite);
+                const cB = new THREE.Mesh(vGeo, dioramaMaterials.mWhite);
                 cB.position.set(cx * vSize, Math.sin(cx) * 0.2, cz * vSize);
                 cloudRig.add(cB);
             }
@@ -226,6 +228,32 @@
             renderer.render(scene, camera);
         }
         animate();
+    }
+
+    function initWeatherControls() {
+        const btns = document.querySelectorAll('.weather-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.getAttribute('data-weather');
+                btns.forEach(b => b.classList.toggle('active', b === btn));
+
+                if (!dioramaMaterials.mGrass) return;
+
+                if (mode === 'golden') {
+                    dioramaMaterials.mGrass.color.setHex(0x10b981);
+                    dioramaMaterials.mGold.color.setHex(0xf59e0b);
+                    document.documentElement.style.setProperty('--color-gold', '#fcd116');
+                } else if (mode === 'lunar') {
+                    dioramaMaterials.mGrass.color.setHex(0x064e3b);
+                    dioramaMaterials.mGold.color.setHex(0x00d4ff);
+                    document.documentElement.style.setProperty('--color-gold', '#00d4ff');
+                } else if (mode === 'cloudy') {
+                    dioramaMaterials.mGrass.color.setHex(0x059669);
+                    dioramaMaterials.mGold.color.setHex(0xe2e8f0);
+                    document.documentElement.style.setProperty('--color-gold', '#e2e8f0');
+                }
+            });
+        });
     }
 
     /* ==========================================================================
@@ -595,7 +623,7 @@
                     if (Math.abs(p.vy) < 0.3) p.vy = 0;
                 }
 
-                if (p.initialY + p.y <= ceilingY) { p.y = ceilingY - p.initialY; p.vy = -p.vy * 0.4; }
+                if (p.initialY + p.y <= ceilingY) { p.y = ceilingY - p.initialY; p.vy *= -0.4; }
                 if (absX <= leftWallX) { p.x = leftWallX - p.initialX; p.vx = -p.vx * 0.5; }
                 else if (absX + p.width >= rightWallX) { p.x = rightWallX - p.initialX - p.width; p.vx = -p.vx * 0.5; }
             }
@@ -721,17 +749,14 @@
         let html = '<div class="projects-grid">';
         html += FEATURED_PROJECTS.map(p => `
             <div class="project-card">
-                <span class="project-badge">${p.badge}</span>
-                <h3>${p.name}</h3>
+                <span class="project-badge pixel">${p.badge}</span>
+                <h3 class="pixel">${p.name}</h3>
                 <p>${p.description}</p>
-                <div class="project-tags">
+                <div class="project-tags pixel">
                     ${p.tags.map(t => `<span class="project-tag">${t}</span>`).join('')}
                 </div>
                 <div class="project-links">
-                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="project-link">
-                        View Project
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-                    </a>
+                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="project-link pixel">[VIEW PROJECT]</a>
                 </div>
             </div>
         `).join('');
@@ -750,18 +775,15 @@
                 filtered.forEach(repo => {
                     const card = `
                         <div class="project-card">
-                            <span class="project-badge">GITHUB REPO</span>
-                            <h3>${repo.name}</h3>
+                            <span class="project-badge pixel">GITHUB REPO</span>
+                            <h3 class="pixel">${repo.name}</h3>
                             <p>${repo.description || 'Open source project by Gaurav Verma.'}</p>
-                            <div class="project-tags">
+                            <div class="project-tags pixel">
                                 <span class="project-tag">${repo.language || 'Code'}</span>
                                 <span class="project-tag">★ ${repo.stargazers_count}</span>
                             </div>
                             <div class="project-links">
-                                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link">
-                                    GitHub
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-                                </a>
+                                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link pixel">[GITHUB]</a>
                             </div>
                         </div>
                     `;
@@ -783,6 +805,10 @@
                 const list = document.getElementById('thm-rooms-list');
                 if (list && data.recentRooms) {
                     list.innerHTML = data.recentRooms.map(r => `<li>✔ ${r}</li>`).join('');
+                }
+                if (data.rank) {
+                    const hud = document.getElementById('hudThmRank');
+                    if (hud) hud.textContent = data.rank;
                 }
                 if (data.badgeUrl) {
                     const badgeImg = document.getElementById('thm-badge-img');
@@ -808,6 +834,10 @@
                         <p>Easy: <span class="green-text">${data.easySolved || '110+'}</span> | Medium: <span class="cyan-text">${data.mediumSolved || '160+'}</span></p>
                     `;
                 }
+                if (data.totalSolved) {
+                    const hud = document.getElementById('hudLeetCode');
+                    if (hud) hud.textContent = `${data.totalSolved} SOLVED`;
+                }
             }
         } catch (e) {}
     }
@@ -832,6 +862,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         initThemeToggle();
         init3DVoxelScene();
+        initWeatherControls();
         renderProjects();
         loadStats();
         initTextPhysics();
