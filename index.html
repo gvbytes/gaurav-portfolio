@@ -3,517 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaurav Verma | Always Exploring // B.Cyber @ IIT Kanpur</title>
-    <meta name="description" content="Portfolio of Gaurav Verma — Cybersecurity student at IIT Kanpur, tool builder, reverse engineering, cryptography, and network security explorer.">
-    <meta name="theme-color" content="#06080e">
+    <title>Gaurav Verma | Always Exploring</title>
+    <meta name="description" content="Portfolio of Gaurav Verma — cybersecurity learner and builder. Security tools, networking, cryptography, log analysis, and traffic monitoring projects.">
+    <meta name="theme-color" content="#06060e">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
 
-    <!-- CRT Scanline Grid Overlay -->
+    <!-- CRT Scanlines -->
     <div class="crt-scanlines" aria-hidden="true"></div>
 
-    <!-- 3D Voxel WebGL Canvas -->
-    <canvas id="webgl-canvas" aria-hidden="true"></canvas>
+    <!-- 3D Voxel Background Canvas -->
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
 
-    <div class="site-wrapper">
-
-        <!-- Retro Top Telemetry HUD -->
-        <header class="retro-hud">
-            <div class="hud-left">
-                <a href="#hero" class="hud-logo pixel">GV<span class="gold-text">.BYTES</span></a>
-                <span class="hud-badge pixel">[IIT KANPUR // B.CYBER]</span>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo pixel">GV<span class="gold-text">.bytes</span></a>
+            <div class="nav-links" id="nav-links">
+                <a href="#about" class="nav-link pixel">About</a>
+                <a href="#projects" class="nav-link pixel">Projects</a>
+                <a href="#learning" class="nav-link pixel">Learning</a>
+                <a href="#certifications" class="nav-link pixel">Certifications</a>
+                <a href="#contact" class="nav-link pixel">Contact</a>
             </div>
-            <div class="hud-stats pixel">
-                <div class="stat-box">
-                    <span class="stat-lbl">STATUS</span>
-                    <span class="stat-val green-text">ONLINE</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-lbl">THM_RANK</span>
-                    <span id="hudThmRank" class="stat-val gold-text">TOP 1%</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-lbl">LEETCODE</span>
-                    <span id="hudLeetCode" class="stat-val cyan-text">ACTIVE</span>
-                </div>
-            </div>
-            <div class="hud-actions">
-                <button id="crtToggle" class="hud-btn pixel" title="Toggle CRT Scanlines">[CRT]</button>
-                <button id="audioToggle" class="hud-btn pixel" title="Toggle 8-Bit Audio">[SFX: ON]</button>
-            </div>
-        </header>
-
-        <!-- Navigation Bar -->
-        <nav id="navbar">
-            <div class="nav-container">
-                <div class="nav-links" id="nav-links">
-                    <a href="#about" class="nav-item pixel">01. ABOUT</a>
-                    <a href="#projects" class="nav-item pixel">02. PROJECTS</a>
-                    <a href="#terminal-section" class="nav-item pixel">03. TERMINAL</a>
-                    <a href="#learning" class="nav-item pixel">04. STATS</a>
-                    <a href="#certifications" class="nav-item pixel">05. CERTS</a>
-                    <a href="#trusthouse" class="nav-item pixel">06. TRUSTHOUSE</a>
-                    <a href="#contact" class="nav-item pixel">07. CONTACT</a>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Hero Section -->
-        <section id="hero" class="hero-section">
-            <div class="container">
-                <div class="hero-box">
-                    <div class="hero-telemetry pixel">
-                        <span class="pulse-dot"></span>
-                        <span>SYSTEM LOADED // 16-BIT SKY-ISLE DIORAMA ACTIVE</span>
-                    </div>
-
-                    <h1 class="hero-title pixel">
-                        GAURAV <span class="gold-text">VERMA</span>
-                    </h1>
-
-                    <p class="hero-subtitle pixel">
-                        FETCHING THE DATA OF LIFE... // CYBERSECURITY & SYSTEMS EXPLORER
-                    </p>
-
-                    <p class="hero-bio">
-                        B.Cyber Student at <strong class="gold-text">IIT Kanpur</strong>. Security tools builder, reverse engineering enthusiast, network security researcher, and systems architect.
-                    </p>
-
-                    <!-- Interactive Weather / 3D Controller -->
-                    <div class="weather-controls pixel">
-                        <span class="ctrl-lbl">3D BIOME ATMOSPHERE:</span>
-                        <button class="weather-btn active" data-weather="golden">[SUNSET GOLD]</button>
-                        <button class="weather-btn" data-weather="lunar">[NIGHTFALL BLUE]</button>
-                        <button class="weather-btn" data-weather="cloudy">[ALPINE MIST]</button>
-                    </div>
-
-                    <div class="hero-cta">
-                        <a href="#projects" class="pixel-btn pixel-btn-gold pixel">
-                            <i data-lucide="terminal"></i> EXPLORE PROJECTS
-                        </a>
-                        <a href="#terminal-section" class="pixel-btn pixel-btn-dark pixel">
-                            <i data-lucide="code"></i> LAUNCH TERMINAL
-                        </a>
-                        <a href="#contact" class="pixel-btn pixel-btn-emerald pixel">
-                            <i data-lucide="mail"></i> GET IN TOUCH
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="section-tag pixel">[ 01 // PROFILE ]</span>
-                    <h2 class="pixel">WHO AM I ?</h2>
-                </div>
-
-                <div class="about-grid">
-                    <div class="about-card main-bio">
-                        <h3 class="pixel gold-text">CYBERSECURITY LEARNER & BUILDER</h3>
-                        <p>
-                            I am a cybersecurity student at <strong>IIT Kanpur</strong> with a deep passion for low-level systems, network traffic analysis, cryptography, reverse engineering, and threat intelligence.
-                        </p>
-                        <p>
-                            Whether participating in CTF competitions with pclub, dissecting binaries, auditing browser sandboxes, or building automated defense tooling, I focus on understanding systems from the ground up.
-                        </p>
-
-                        <div class="about-highlight-box pixel">
-                            <div class="hl-item">
-                                <span class="hl-num gold-text">IITK</span>
-                                <span class="hl-label">B.Cyber Undergraduate</span>
-                            </div>
-                            <div class="hl-item">
-                                <span class="hl-num green-text">CTF</span>
-                                <span class="hl-label">Active Competitor</span>
-                            </div>
-                            <div class="hl-item">
-                                <span class="hl-num cyan-text">OPEN</span>
-                                <span class="hl-label">Source Contributor</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="about-card skills-card">
-                        <h3 class="pixel green-text">CORE DOMAINS & TOOLKIT</h3>
-                        <div class="skill-tags">
-                            <span class="tag pixel">Network Security</span>
-                            <span class="tag pixel">Reverse Engineering</span>
-                            <span class="tag pixel">Applied Cryptography</span>
-                            <span class="tag pixel">Traffic Analysis</span>
-                            <span class="tag pixel">Log Forensics</span>
-                            <span class="tag pixel">Python</span>
-                            <span class="tag pixel">C / C++</span>
-                            <span class="tag pixel">Ghidra</span>
-                            <span class="tag pixel">Wireshark</span>
-                            <span class="tag pixel">Burp Suite</span>
-                            <span class="tag pixel">Nmap</span>
-                            <span class="tag pixel">Linux Internals</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Projects Section -->
-        <section id="projects" class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="section-tag pixel">[ 02 // ARSENAL ]</span>
-                    <h2 class="pixel">FEATURED PROJECTS</h2>
-                    <p class="section-desc">Selected security tools, architectural prototypes, and security research.</p>
-                </div>
-
-                <div class="projects-grid">
-
-                    <!-- TrustHouse -->
-                    <div class="project-card">
-                        <div class="card-top pixel">
-                            <span class="card-badge gold-badge">[FLAGSHIP // SECURITY]</span>
-                            <span class="card-lang">Python</span>
-                        </div>
-                        <h3 class="pixel">TrustHouse</h3>
-                        <p>
-                            A secure, transparent authentication and verification framework engineered for verifiable data exchanges and zero-trust identity architectures.
-                        </p>
-                        <div class="card-tech pixel">
-                            <span>Zero-Trust</span> • <span>Cryptography</span> • <span>Verification</span>
-                        </div>
-                        <div class="card-actions">
-                            <a href="https://github.com/gvbytes/trusthouse" target="_blank" class="card-btn pixel">[VIEW ON GITHUB]</a>
-                            <a href="#trusthouse" class="card-btn pixel">[DEEP DIVE]</a>
-                        </div>
-                    </div>
-
-                    <!-- PassGauge -->
-                    <div class="project-card">
-                        <div class="card-top pixel">
-                            <span class="card-badge green-badge">[TOOL // ENTROPY]</span>
-                            <span class="card-lang">Python</span>
-                        </div>
-                        <h3 class="pixel">PassGauge</h3>
-                        <p>
-                            Advanced password entropy calculator and pattern strength auditor evaluating mathematical randomness and vulnerability against dictionary/brute-force attacks.
-                        </p>
-                        <div class="card-tech pixel">
-                            <span>Entropy Analysis</span> • <span>Heuristics</span>
-                        </div>
-                        <div class="card-actions">
-                            <a href="https://github.com/gvbytes/passgauge" target="_blank" class="card-btn pixel">[VIEW ON GITHUB]</a>
-                        </div>
-                    </div>
-
-                    <!-- LinkSleuth -->
-                    <div class="project-card">
-                        <div class="card-top pixel">
-                            <span class="card-badge cyan-badge">[THREAT INTEL]</span>
-                            <span class="card-lang">Python</span>
-                        </div>
-                        <h3 class="pixel">LinkSleuth</h3>
-                        <p>
-                            Automated URL analysis and phishing threat intelligence scanner inspecting redirection chains, domain heuristics, SSL validity, and payload indicators.
-                        </p>
-                        <div class="card-tech pixel">
-                            <span>OSINT</span> • <span>Phishing Detection</span>
-                        </div>
-                        <div class="card-actions">
-                            <a href="https://github.com/gvbytes/linksleuth" target="_blank" class="card-btn pixel">[VIEW ON GITHUB]</a>
-                        </div>
-                    </div>
-
-                    <!-- VaultLock -->
-                    <div class="project-card">
-                        <div class="card-top pixel">
-                            <span class="card-badge gold-badge">[CRYPTOGRAPHY]</span>
-                            <span class="card-lang">Python / Cryptography</span>
-                        </div>
-                        <h3 class="pixel">VaultLock</h3>
-                        <p>
-                            Local encrypted secret store utilizing authenticated AES-GCM-256 and Argon2 key derivation for secure credential isolation and zero plaintext exposure.
-                        </p>
-                        <div class="card-tech pixel">
-                            <span>AES-256-GCM</span> • <span>Argon2id</span>
-                        </div>
-                        <div class="card-actions">
-                            <a href="https://github.com/gvbytes/vaultlock" target="_blank" class="card-btn pixel">[VIEW ON GITHUB]</a>
-                        </div>
-                    </div>
-
-                    <!-- ThreatMind AI -->
-                    <div class="project-card">
-                        <div class="card-top pixel">
-                            <span class="card-badge green-badge">[AI & SEC]</span>
-                            <span class="card-lang">Python / ML</span>
-                        </div>
-                        <h3 class="pixel">ThreatMind AI</h3>
-                        <p>
-                            Machine learning and anomaly detection pipeline classifying suspicious network log records and telemetry vectors for automated SOC alert triaging.
-                        </p>
-                        <div class="card-tech pixel">
-                            <span>Anomaly Detection</span> • <span>SOC Triage</span>
-                        </div>
-                        <div class="card-actions">
-                            <a href="https://github.com/gvbytes/threatmind-ai" target="_blank" class="card-btn pixel">[VIEW ON GITHUB]</a>
-                        </div>
-                    </div>
-
-                    <!-- SRM Secure Browser Report -->
-                    <div class="project-card">
-                        <div class="card-top pixel">
-                            <span class="card-badge red-badge">[RESEARCH AUDIT]</span>
-                            <span class="card-lang">Security Vulnerability</span>
-                        </div>
-                        <h3 class="pixel">SRM Secure Browser Audit</h3>
-                        <p>
-                            Detailed vulnerability analysis and penetration testing report discovering process isolation and integrity bypass flaws in proctored browser software.
-                        </p>
-                        <div class="card-tech pixel">
-                            <span>AppSec</span> • <span>Sandbox Bypass</span>
-                        </div>
-                        <div class="card-actions">
-                            <a href="srm-secure-browser-report.html" class="card-btn pixel">[READ FULL REPORT]</a>
-                            <a href="https://github.com/gvbytes/srm-secure-browser-vulnerabilities" target="_blank" class="card-btn pixel">[GITHUB REPO]</a>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Dynamic Live GitHub Repositories -->
-                <div class="dynamic-gh-wrapper">
-                    <div class="section-subheading">
-                        <span class="section-tag pixel">[ LIVE REPOSITORIES // GITHUB API ]</span>
-                        <h3 class="pixel">LATEST OPEN-SOURCE ACTIVITY</h3>
-                    </div>
-                    <div id="github-projects-grid" class="projects-grid">
-                        <div class="loading-state pixel">
-                            <span class="gold-text">FETCHING GITHUB DATA...</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Interactive Retro Cybersec Terminal -->
-        <section id="terminal-section" class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="section-tag pixel">[ 03 // CONSOLE ]</span>
-                    <h2 class="pixel">VOXEL CYBERSEC TERMINAL</h2>
-                    <p class="section-desc">Execute commands to interact with system telemetry, stats, and 3D engine controls.</p>
-                </div>
-
-                <div class="terminal-container">
-                    <div class="terminal-topbar pixel">
-                        <div class="term-lights">
-                            <span class="term-dot red-dot"></span>
-                            <span class="term-dot yellow-dot"></span>
-                            <span class="term-dot green-dot"></span>
-                        </div>
-                        <span class="term-title">gaurav@iitk-cyberspace:~</span>
-                        <span class="term-shell">zsh 5.9</span>
-                    </div>
-
-                    <div class="terminal-body" id="terminalOutput">
-                        <div class="term-line pixel">
-                            <span class="gold-text">GV-BYTES TERMINAL v3.2.0 [x86_64-iitk-linux]</span>
-                        </div>
-                        <div class="term-line pixel">
-                            <span>Type <span class="green-text">help</span> to view available commands. Type <span class="cyan-text">weather sunset</span> to manipulate 3D space.</span>
-                        </div>
-                        <div class="term-divider"></div>
-                    </div>
-
-                    <div class="terminal-input-row">
-                        <span class="term-prompt pixel">gaurav@iitk:~$</span>
-                        <input type="text" id="terminalInput" class="term-input pixel" autocomplete="off" spellcheck="false" placeholder="Type a command (e.g. help, projects, thm, weather)...">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Learning & Live Stats (TryHackMe & LeetCode) -->
-        <section id="learning" class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="section-tag pixel">[ 04 // METRICS ]</span>
-                    <h2 class="pixel">PRACTICE & LIVE STATS</h2>
-                    <p class="section-desc">Continuous training across offensive security, network labs, and algorithmic problem solving.</p>
-                </div>
-
-                <div class="stats-cards-grid">
-
-                    <!-- TryHackMe Box -->
-                    <div class="stats-card">
-                        <div class="card-top pixel">
-                            <span class="card-badge green-badge">[TRYHACKME METRICS]</span>
-                            <span class="gold-text">@gvbytes</span>
-                        </div>
-                        <h3 class="pixel">Offensive Security Labs</h3>
-                        <p class="stats-desc">Active challenges across privilege escalation, web exploitation, digital forensics, and network pivoting.</p>
-
-                        <div class="thm-stats-grid pixel">
-                            <div class="thm-stat-item">
-                                <span class="stat-num green-text" id="thmRankDisplay">TOP 1%</span>
-                                <span class="stat-lbl">Global Ranking</span>
-                            </div>
-                            <div class="thm-stat-item">
-                                <span class="stat-num gold-text" id="thmRoomsDisplay">120+</span>
-                                <span class="stat-lbl">Rooms Solved</span>
-                            </div>
-                            <div class="thm-stat-item">
-                                <span class="stat-num cyan-text" id="thmPointsDisplay">14,200</span>
-                                <span class="stat-lbl">Total Score</span>
-                            </div>
-                        </div>
-
-                        <div class="thm-actions">
-                            <a href="https://tryhackme.com/p/gvbytes" target="_blank" class="card-btn pixel">[VIEW PROFILE ON TRYHACKME]</a>
-                        </div>
-                    </div>
-
-                    <!-- LeetCode Box -->
-                    <div class="stats-card">
-                        <div class="card-top pixel">
-                            <span class="card-badge gold-badge">[LEETCODE METRICS]</span>
-                            <span class="cyan-text">@gvbytes</span>
-                        </div>
-                        <h3 class="pixel">Algorithms & Data Structures</h3>
-                        <p class="stats-desc">Continuous training across graphs, dynamic programming, binary trees, bit manipulation, and complexity analysis.</p>
-
-                        <div class="lc-stats-grid pixel">
-                            <div class="lc-stat-item">
-                                <span class="stat-num gold-text" id="lcSolvedDisplay">300+</span>
-                                <span class="stat-lbl">Problems Solved</span>
-                            </div>
-                            <div class="lc-stat-item">
-                                <span class="stat-num green-text" id="lcEasyDisplay">Easy: 110</span>
-                                <span class="stat-lbl">Foundations</span>
-                            </div>
-                            <div class="lc-stat-item">
-                                <span class="stat-num cyan-text" id="lcMediumDisplay">Med: 160+</span>
-                                <span class="stat-lbl">Core Systems</span>
-                            </div>
-                        </div>
-
-                        <div class="lc-actions">
-                            <a href="https://leetcode.com/u/gvbytes/" target="_blank" class="card-btn pixel">[VIEW PROFILE ON LEETCODE]</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- Certifications Section -->
-        <section id="certifications" class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="section-tag pixel">[ 05 // CREDENTIALS ]</span>
-                    <h2 class="pixel">CERTIFICATIONS</h2>
-                </div>
-
-                <div class="cert-grid">
-                    <div class="cert-card">
-                        <div class="cert-icon pixel">★</div>
-                        <div class="cert-content">
-                            <span class="cert-tag pixel">[CERTIFIED SPECIALIST]</span>
-                            <h3 class="pixel">Certified Large Language Model Security Practitioner (CLLMSP)</h3>
-                            <p>Specialized verification in LLM prompt injection defenses, model evasion mitigations, AI agent attack surfaces, and output sanitization frameworks.</p>
-                            <button id="viewCertBtn" class="pixel-btn pixel-btn-gold pixel">[VIEW CERTIFICATE MODAL]</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TrustHouse Spotlight -->
-        <section id="trusthouse" class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="section-tag pixel">[ 06 // ARCHITECTURE ]</span>
-                    <h2 class="pixel">TRUSTHOUSE SPOTLIGHT</h2>
-                </div>
-
-                <div class="spotlight-card">
-                    <h3 class="pixel gold-text">Zero-Trust Identity & Proof Verification</h3>
-                    <p>
-                        TrustHouse is an ongoing security architecture focused on building robust authentication pipelines where identity and authorization are dynamically evaluated without implicit trust zones.
-                    </p>
-                    <div class="spotlight-features pixel">
-                        <div class="feat-col">[+] Cryptographically signed audit trails</div>
-                        <div class="feat-col">[+] Zero-trust session token binding</div>
-                        <div class="feat-col">[+] Distributed anomaly verification</div>
-                    </div>
-                    <div class="spotlight-btn-row">
-                        <a href="https://github.com/gvbytes/trusthouse" target="_blank" class="pixel-btn pixel-btn-emerald pixel">[VIEW SOURCE CODE ON GITHUB]</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="section-tag pixel">[ 07 // TRANSMISSION ]</span>
-                    <h2 class="pixel">GET IN TOUCH</h2>
-                    <p class="section-desc">Open for research discussions, security tooling collaborations, and CTF challenges.</p>
-                </div>
-
-                <div class="contact-grid">
-                    <div class="contact-card">
-                        <h3 class="pixel green-text">DIRECT DISPATCH</h3>
-                        <p class="pixel" style="font-size: 1.3rem; margin: 16px 0;">
-                            <a href="mailto:contact@gvbytes.com" class="gold-text">contact@gvbytes.com</a>
-                        </p>
-                        <p>Feel free to reach out via email or connect on social platforms.</p>
-                    </div>
-
-                    <div class="contact-card">
-                        <h3 class="pixel cyan-text">SOCIAL CHANNELS</h3>
-                        <div class="social-links-grid pixel">
-                            <a href="https://github.com/gvbytes" target="_blank" class="social-link">[★ GITHUB: @gvbytes]</a>
-                            <a href="https://x.com/gvbytes" target="_blank" class="social-link">[✦ TWITTER / X: @gvbytes]</a>
-                            <a href="https://tryhackme.com/p/gvbytes" target="_blank" class="social-link">[▲ TRYHACKME: @gvbytes]</a>
-                            <a href="https://leetcode.com/u/gvbytes/" target="_blank" class="social-link">[■ LEETCODE: @gvbytes]</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="retro-footer">
-            <div class="container footer-content pixel">
-                <span>(C) 2026 GAURAV VERMA • GVBYTES.COM</span>
-                <span class="green-text">16-BIT VOXEL DIORAMA ENGINE ACTIVE</span>
-            </div>
-        </footer>
-
-    </div>
-
-    <!-- Certificate Modal -->
-    <div id="certModal" class="modal-backdrop" aria-hidden="true">
-        <div class="modal-box">
-            <div class="modal-topbar pixel">
-                <span>CERTIFICATE // CLLMSP</span>
-                <button id="closeModalBtn" class="modal-close pixel">[X]</button>
-            </div>
-            <div class="modal-img-wrapper">
-                <img src="cllmsp_certificate.png" alt="CLLMSP Certificate" class="cert-img">
+            <div class="nav-actions">
+                <button class="theme-toggle pixel" id="theme-toggle" aria-label="Toggle theme">
+                    [THEME]
+                </button>
             </div>
         </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="container hero-content">
+            <div class="hero-badge pixel">
+                <span class="badge-dot"></span>
+                Always Exploring
+            </div>
+            <h1 class="hero-name pixel">
+                Gaurav<br><span class="gold-text">Verma</span>
+            </h1>
+            <p class="hero-tagline vt">Fetching the Data of Life...</p>
+            <div class="hero-cta">
+                <a href="#projects" class="btn btn-primary pixel">View Projects</a>
+                <a href="#contact" class="btn btn-ghost pixel">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 01: About -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number pixel">01</span>
+                <span class="section-tag pixel">// about</span>
+                <h2 class="pixel">Who Am I ?</h2>
+            </div>
+            <div class="about-grid">
+                <div class="about-text">
+                    <h3 class="about-tagline pixel">Exploring technology, building startups, and securing systems.</h3>
+                    <p class="about-desc">I'm Gaurav — an enthusiast who got into the world of computers during the lockdown when I got my first PC. Since then, I have been driven by curiosity to build systems that solve real-world problems and explore cybersecurity, programming, and startups.</p>
+                    
+                    <div class="bio-milestones">
+                        <div class="milestone-card">
+                            <span class="milestone-icon">👟</span>
+                            <div class="milestone-details">
+                                <strong class="pixel">Ultrasonic Shoes</strong>
+                                <span>Blind assistance shoes built with custom sensors.</span>
+                            </div>
+                        </div>
+                        <div class="milestone-card">
+                            <span class="milestone-icon">💬</span>
+                            <div class="milestone-details">
+                                <strong class="pixel">Chat Application</strong>
+                                <span>WhatsApp-like instant messaging using open-source tools.</span>
+                            </div>
+                        </div>
+                        <div class="milestone-card">
+                            <span class="milestone-icon">🎓</span>
+                            <div class="milestone-details">
+                                <strong class="pixel">Learning Platform</strong>
+                                <span>English study app built using Google APIs in 10th grade.</span>
+                            </div>
+                        </div>
+                        <div class="milestone-card">
+                            <span class="milestone-icon">🧠</span>
+                            <div class="milestone-details">
+                                <strong class="pixel">Custom LLM</strong>
+                                <span>In Development — building a large language model from scratch.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bio-code-box">
+                        <span class="code-keyword vt">print</span>(<span class="code-string vt">"Hello World!"</span>)
+                    </div>
+                </div>
+
+                <div class="about-terminal">
+                    <div class="terminal-window">
+                        <div class="terminal-header">
+                            <div class="terminal-dots">
+                                <span class="terminal-dot dot-red"></span>
+                                <span class="terminal-dot dot-yellow"></span>
+                                <span class="terminal-dot dot-green"></span>
+                            </div>
+                            <span class="terminal-title pixel">gaurav@kali:~</span>
+                        </div>
+                        <div class="terminal-body vt" id="terminal-body">
+                            <div class="terminal-line"><span class="prompt">$</span> whoami</div>
+                            <div class="terminal-output gold-text">gaurav_verma</div>
+                            <div class="terminal-line"><span class="prompt">$</span> cat interests.txt</div>
+                            <div class="terminal-output green-text">programming, startups, networking, cryptography,<br>log analysis, traffic monitoring, ethical hacking</div>
+                            <div class="terminal-line"><span class="prompt">$</span> ls ~/projects | wc -l</div>
+                            <div class="terminal-output cyan-text">11</div>
+                            <div class="terminal-line"><span class="prompt">$</span> cat status.txt</div>
+                            <div class="terminal-output">always learning 🔒</div>
+                            <div class="terminal-line"><span class="prompt">$</span> <span class="cursor-blink">_</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 02: Projects -->
+    <section id="projects" class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number pixel">02</span>
+                <span class="section-tag pixel">// projects</span>
+                <h2 class="pixel">What I've Built</h2>
+                <p class="section-subtitle">Security tools covering networking, cryptography, log analysis, and monitoring.</p>
+            </div>
+            <div id="projects-container" class="projects-grid">
+                <!-- Dynamically populated by script.js with featured projects & live GitHub repos -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 03: Learning Journey -->
+    <section id="learning" class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number pixel">03</span>
+                <span class="section-tag pixel">// learning</span>
+                <h2 class="pixel">Learning Journey</h2>
+            </div>
+            <div class="learning-grid" id="learning-grid">
+                
+                <!-- TryHackMe Card -->
+                <div class="learning-card">
+                    <div class="learning-card-header">
+                        <div class="learning-icon tryhackme-icon pixel">THM</div>
+                        <h3 class="pixel">TryHackMe</h3>
+                    </div>
+                    <a href="https://tryhackme.com/p/gvbytes" target="_blank" rel="noopener noreferrer" class="learning-profile-link vt">
+                        tryhackme.com/p/gvbytes
+                    </a>
+                    <div class="thm-badge-container" id="thm-badge-container">
+                        <img src="" alt="TryHackMe Profile Badge" class="thm-live-badge" id="thm-badge-img" style="display:none;" />
+                    </div>
+                    <ul class="learning-items vt" id="thm-rooms-list">
+                        <li class="loading">Loading progress…</li>
+                    </ul>
+                </div>
+                
+                <!-- LeetCode Card -->
+                <div class="learning-card">
+                    <div class="learning-card-header">
+                        <div class="learning-icon leetcode-icon pixel">LC</div>
+                        <h3 class="pixel">LeetCode</h3>
+                    </div>
+                    <a href="https://leetcode.com/u/gvbytes/" target="_blank" rel="noopener noreferrer" class="learning-profile-link vt">
+                        leetcode.com/u/gvbytes
+                    </a>
+                    <div class="leetcode-stats vt" id="lc-stats">
+                        <p class="loading">Loading stats…</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 04: Certifications -->
+    <section id="certifications" class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number pixel">04</span>
+                <span class="section-tag pixel">// certifications</span>
+                <h2 class="pixel">Certifications</h2>
+            </div>
+            <div class="certifications-grid">
+                <div class="cert-card">
+                    <div class="cert-preview-container">
+                        <img src="cllmsp_certificate.png" alt="Certified LLM Security Professional (CLLMSP)" class="cert-img" loading="lazy" />
+                    </div>
+                    <div class="cert-content">
+                        <span class="cert-issuer pixel gold-text">RED TEAM LEADERS</span>
+                        <h3 class="cert-title pixel">Certified LLM Security Professional (CLLMSP)</h3>
+                        <p class="cert-meta vt">Issued: June 25, 2026 • Instructor: Joas A. Santos</p>
+                        <p class="cert-description">Passed comprehensive examination demonstrating expertise in LLM threat modeling, red teaming AI architectures, prompt injection security, and adversarial AI defense.</p>
+                        <div class="cert-footer">
+                            <a href="https://courses.redteamleaders.com/exam-completion/2ca61171f2ab01d7" target="_blank" rel="noopener noreferrer" class="btn btn-primary pixel">
+                                Verify Credential
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 05: Contact -->
+    <footer id="contact" class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number pixel">05</span>
+                <span class="section-tag pixel">// contact</span>
+                <h2 class="pixel">Let's Connect</h2>
+            </div>
+            <div class="social-links">
+                <a href="https://github.com/gvbytes" target="_blank" rel="noopener noreferrer" class="social-card" id="social-github">
+                    <span class="social-label pixel">GitHub</span>
+                    <span class="social-handle vt">gvbytes</span>
+                </a>
+                <a href="https://x.com/gvbytes" target="_blank" rel="noopener noreferrer" class="social-card" id="social-x">
+                    <span class="social-label pixel">X</span>
+                    <span class="social-handle vt">gvbytes</span>
+                </a>
+                <a href="https://www.linkedin.com/in/gaurav-verma-550aa8418/" target="_blank" rel="noopener noreferrer" class="social-card" id="social-linkedin">
+                    <span class="social-label pixel">LinkedIn</span>
+                    <span class="social-handle vt">gaurav-verma</span>
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="vt">&copy; 2026 Gaurav Verma. Built from scratch.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Physics Dock -->
+    <div class="physics-dock" id="physics-dock">
+        <button class="dock-btn pixel" id="btn-gravity" data-mode="gravity" title="Gravity">Gravity</button>
+        <button class="dock-btn pixel" id="btn-vacuum" data-mode="vacuum" title="Vacuum">Vacuum</button>
+        <button class="dock-btn pixel" id="btn-blackhole" data-mode="blackhole" title="Black Hole">Orbit</button>
+        <button class="dock-btn pixel" id="btn-explode" data-mode="explode" title="Explode">Pulse</button>
+        <button class="dock-btn dock-btn-reset pixel" id="btn-reset" title="Reset">Reset</button>
     </div>
+
+    <!-- Back to top -->
+    <button class="back-to-top pixel" id="back-to-top" aria-label="Back to top">↑</button>
 
     <script src="script.js"></script>
 </body>

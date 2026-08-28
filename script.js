@@ -1,6 +1,6 @@
 /**
- * GVBYTES.COM — 16-Bit Voxel Sky-Isle Diorama & Cybersec Engine
- * Fully client-side, responsive, high-performance WebGL & Terminal Engine
+ * GVBYTES.COM — Authentic 16-Bit Voxel Sky-Isle Engine
+ * Fully client-side, responsive, zero-lag WebGL & Interactive Physics
  */
 
 (function () {
@@ -9,43 +9,84 @@
     const GH_USER = 'gvbytes';
     const EXCLUDE_REPOS = ['gvbytes', 'gaurav-portfolio'];
 
-    // Web Audio Synthesizer State
-    let audioEnabled = true;
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null;
+    // Featured Security Projects
+    const FEATURED_PROJECTS = [
+        {
+            name: "TrustHouse",
+            badge: "FLAGSHIP // SECURITY",
+            lang: "Python",
+            description: "A secure, transparent authentication and verification framework engineered for verifiable data exchanges and zero-trust identity architectures.",
+            tags: ["Zero-Trust", "Cryptography", "Verification"],
+            url: "https://github.com/gvbytes/trusthouse"
+        },
+        {
+            name: "PassGauge",
+            badge: "TOOL // ENTROPY",
+            lang: "Python",
+            description: "Advanced password entropy calculator and pattern strength auditor evaluating mathematical randomness and brute-force resistance.",
+            tags: ["Entropy Analysis", "Heuristics"],
+            url: "https://github.com/gvbytes/passgauge"
+        },
+        {
+            name: "LinkSleuth",
+            badge: "THREAT INTEL",
+            lang: "Python",
+            description: "Automated URL analysis and phishing threat intelligence scanner inspecting redirection chains, domain heuristics, SSL validity, and payload indicators.",
+            tags: ["OSINT", "Phishing Detection"],
+            url: "https://github.com/gvbytes/linksleuth"
+        },
+        {
+            name: "VaultLock",
+            badge: "CRYPTOGRAPHY",
+            lang: "Python / Cryptography",
+            description: "Local encrypted secret store utilizing authenticated AES-GCM-256 and Argon2 key derivation for secure credential isolation and zero plaintext exposure.",
+            tags: ["AES-256-GCM", "Argon2id"],
+            url: "https://github.com/gvbytes/vaultlock"
+        },
+        {
+            name: "ThreatMind AI",
+            badge: "AI & SEC",
+            lang: "Python / ML",
+            description: "Machine learning and anomaly detection pipeline classifying suspicious network log records and telemetry vectors for automated SOC alert triaging.",
+            tags: ["Anomaly Detection", "SOC Triage"],
+            url: "https://github.com/gvbytes/threatmind-ai"
+        },
+        {
+            name: "SRM Secure Browser Audit",
+            badge: "RESEARCH REPORT",
+            lang: "Security Audit",
+            description: "Detailed vulnerability analysis and penetration testing report discovering process isolation and integrity bypass flaws in proctored browser software.",
+            tags: ["AppSec", "Sandbox Bypass"],
+            url: "srm-secure-browser-report.html"
+        }
+    ];
 
-    function play8BitChime(frequency = 987.77, duration = 0.25) {
-        if (!audioEnabled) return;
-        try {
-            if (!audioCtx) audioCtx = new AudioContext();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+    /* ==========================================================================
+       THEME TOGGLE
+       ========================================================================== */
+    function initTheme() {
+        const toggle = document.getElementById('theme-toggle');
+        if (!toggle) return;
 
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
+        const saved = localStorage.getItem('gv-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
 
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(frequency * 1.33, audioCtx.currentTime + duration * 0.4);
-
-            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
-        } catch (e) {}
+        toggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('gv-theme', next);
+        });
     }
 
     /* ==========================================================================
-       THREE.JS 3D VOXEL SKY-ISLE DIORAMA & PARTICLES
+       3D VOXEL SKY-ISLE DIORAMA & GRAVITY ENGINE
        ========================================================================== */
-    let weatherMode = 'golden';
-    let dioramaMaterials = {};
+    let physicsMode = 'normal';
+    let sceneRefs = null;
 
-    function init3DVoxelEngine() {
-        const canvas = document.getElementById('webgl-canvas');
+    function init3DScene() {
+        const canvas = document.getElementById('hero-canvas');
         if (!canvas || !window.THREE) return;
 
         const THREE = window.THREE;
@@ -62,20 +103,20 @@
         // Master Diorama Island Group
         const diorama = new THREE.Group();
         scene.add(diorama);
-        diorama.position.set(isMobile ? 0 : 7.2, 0.5, 0);
+        diorama.position.set(isMobile ? 0 : 7.5, 0.5, 0);
 
         const vSize = 0.45;
         const vGeo = new THREE.BoxGeometry(vSize, vSize, vSize);
 
-        // Voxel Materials
-        dioramaMaterials.mGrass = new THREE.MeshBasicMaterial({ color: 0x10b981 });
-        dioramaMaterials.mDirt = new THREE.MeshBasicMaterial({ color: 0x27272a });
-        dioramaMaterials.mStone = new THREE.MeshBasicMaterial({ color: 0x52525b });
-        dioramaMaterials.mGold = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
-        dioramaMaterials.mWhite = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        dioramaMaterials.mTree = new THREE.MeshBasicMaterial({ color: 0x059669 });
-        dioramaMaterials.mTrunk = new THREE.MeshBasicMaterial({ color: 0x78350f });
-        dioramaMaterials.mWater = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.85 });
+        // Voxel Materials (Zero purple!)
+        const mGrass = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+        const mDirt = new THREE.MeshBasicMaterial({ color: 0x27272a });
+        const mStone = new THREE.MeshBasicMaterial({ color: 0x52525b });
+        const mGold = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+        const mWhite = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const mTree = new THREE.MeshBasicMaterial({ color: 0x059669 });
+        const mTrunk = new THREE.MeshBasicMaterial({ color: 0x78350f });
+        const mWater = new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.85 });
 
         // 1. Build Stepped Voxel Island Base
         const radius = 6;
@@ -85,8 +126,8 @@
                 if (dist <= radius) {
                     const depth = Math.floor((radius - dist) * 0.8) + 1;
                     for (let y = 0; y >= -depth; y--) {
-                        let mat = (y === 0) ? dioramaMaterials.mGrass : ((y === -depth) ? dioramaMaterials.mStone : dioramaMaterials.mDirt);
-                        if (x === 3 && y === 0) mat = dioramaMaterials.mWater;
+                        let mat = (y === 0) ? mGrass : ((y === -depth) ? mStone : mDirt);
+                        if (x === 3 && y === 0) mat = mWater;
                         const block = new THREE.Mesh(vGeo, mat);
                         block.position.set(x * vSize, y * vSize, z * vSize);
                         diorama.add(block);
@@ -99,7 +140,7 @@
         const treeX = -2 * vSize;
         const treeZ = -1 * vSize;
         for (let y = 1; y <= 3; y++) {
-            const trunk = new THREE.Mesh(vGeo, dioramaMaterials.mTrunk);
+            const trunk = new THREE.Mesh(vGeo, mTrunk);
             trunk.position.set(treeX, y * vSize, treeZ);
             diorama.add(trunk);
         }
@@ -107,20 +148,20 @@
             for (let fz = -1; fz <= 1; fz++) {
                 for (let fy = 4; fy <= 6; fy++) {
                     if (fy === 6 && (Math.abs(fx) + Math.abs(fz) > 0)) continue;
-                    const leaf = new THREE.Mesh(vGeo, dioramaMaterials.mTree);
+                    const leaf = new THREE.Mesh(vGeo, mTree);
                     leaf.position.set(treeX + fx * vSize, fy * vSize, treeZ + fz * vSize);
                     diorama.add(leaf);
                 }
             }
         }
 
-        // 3. Build Voxel Mountain Peak on Island
+        // 3. Build Voxel Mountain Peak
         for (let my = 1; my <= 4; my++) {
             const pR = 4 - my;
             for (let px = -pR; px <= pR; px++) {
                 for (let pz = -pR; pz <= pR; pz++) {
                     if (Math.abs(px) + Math.abs(pz) <= pR) {
-                        const rock = new THREE.Mesh(vGeo, my === 4 ? dioramaMaterials.mWhite : dioramaMaterials.mStone);
+                        const rock = new THREE.Mesh(vGeo, my === 4 ? mWhite : mStone);
                         rock.position.set((px + 2) * vSize, my * vSize, (pz + 1) * vSize);
                         diorama.add(rock);
                     }
@@ -138,7 +179,7 @@
             for (let my = -1; my <= 1; my++) {
                 for (let mz = -1; mz <= 1; mz++) {
                     if (Math.abs(mx) + Math.abs(my) + Math.abs(mz) <= 2) {
-                        const mB = new THREE.Mesh(vGeo, dioramaMaterials.mGold);
+                        const mB = new THREE.Mesh(vGeo, mGold);
                         mB.position.set(mx * vSize, my * vSize, mz * vSize);
                         moonRig.add(mB);
                     }
@@ -148,11 +189,11 @@
         moonRig.position.set(4.5, 3.5, 0);
         orbitRig.add(moonRig);
 
-        // Orbiting Fluffy Voxel Cloud
+        // Voxel Cloud
         const cloudRig = new THREE.Group();
         for (let cx = -2; cx <= 2; cx++) {
             for (let cz = -1; cz <= 1; cz++) {
-                const cB = new THREE.Mesh(vGeo, dioramaMaterials.mWhite);
+                const cB = new THREE.Mesh(vGeo, mWhite);
                 cB.position.set(cx * vSize, Math.sin(cx) * 0.2, cz * vSize);
                 cloudRig.add(cB);
             }
@@ -160,15 +201,26 @@
         cloudRig.position.set(-4.5, 2.8, 0);
         orbitRig.add(cloudRig);
 
-        // 5. Floating Ambient Voxel Stars / Gravity Dust
+        // 5. Floating Ambient Voxel Stars with Gravity Physics
         const starCount = 140;
         const stars = [];
         for (let i = 0; i < starCount; i++) {
-            const s = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.18), Math.random() > 0.5 ? dioramaMaterials.mGold : dioramaMaterials.mWhite);
-            s.position.set((Math.random() - 0.5) * 45, (Math.random() - 0.5) * 35, (Math.random() - 0.5) * 25);
+            const s = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.18), Math.random() > 0.5 ? mGold : mWhite);
+            const origPos = new THREE.Vector3(
+                (Math.random() - 0.5) * 45,
+                (Math.random() - 0.5) * 35,
+                (Math.random() - 0.5) * 25
+            );
+            s.position.copy(origPos);
             scene.add(s);
-            stars.push(s);
+            stars.push({
+                mesh: s,
+                origPos: origPos.clone(),
+                velocity: new THREE.Vector3()
+            });
         }
+
+        sceneRefs = { diorama, orbitRig, cloudRig, stars };
 
         // Mouse Parallax
         let mouseX = 0, mouseY = 0;
@@ -183,19 +235,12 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Click Impulse
-        window.addEventListener('click', (e) => {
-            if (e.target.closest('a, button, input, textarea')) return;
-            play8BitChime(1318.51, 0.2);
-            diorama.position.y += 0.4;
-            setTimeout(() => { diorama.position.y -= 0.4; }, 180);
-        });
-
         let time = 0;
         function animate() {
             requestAnimationFrame(animate);
             time += 0.015;
 
+            // Island Idle Breathing
             diorama.position.y = 0.5 + Math.sin(time) * 0.25;
             diorama.rotation.y = time * 0.15 + mouseX * 0.3;
             diorama.rotation.x = 0.25 - mouseY * 0.2;
@@ -203,8 +248,27 @@
             orbitRig.rotation.y = time * 0.3;
             cloudRig.rotation.y += 0.01;
 
-            stars.forEach((s, i) => {
-                s.position.y += Math.sin(time + i) * 0.01;
+            // Physics Dock Simulation Modes
+            stars.forEach((s, idx) => {
+                if (physicsMode === 'gravity') {
+                    s.mesh.position.y -= 0.15;
+                    if (s.mesh.position.y < -15) s.mesh.position.y = 15;
+                } else if (physicsMode === 'vacuum') {
+                    s.mesh.position.y += 0.15;
+                    if (s.mesh.position.y > 15) s.mesh.position.y = -15;
+                } else if (physicsMode === 'blackhole') {
+                    const dist = s.mesh.position.length();
+                    s.mesh.position.x -= (s.mesh.position.x / dist) * 0.2;
+                    s.mesh.position.y -= (s.mesh.position.y / dist) * 0.2;
+                    s.mesh.position.z -= (s.mesh.position.z / dist) * 0.2;
+                    if (dist < 2) s.mesh.position.copy(s.origPos);
+                } else if (physicsMode === 'explode') {
+                    s.mesh.position.x += (Math.random() - 0.5) * 0.8;
+                    s.mesh.position.y += (Math.random() - 0.5) * 0.8;
+                } else {
+                    // Normal gentle drift
+                    s.mesh.position.y = s.origPos.y + Math.sin(time + idx) * 0.8;
+                }
             });
 
             camera.position.x += (mouseX * 2 - camera.position.x) * 0.04;
@@ -216,324 +280,145 @@
         animate();
     }
 
-    // Weather Biome Transition Logic
-    function applyWeatherBiome(mode) {
-        weatherMode = mode;
-        const btns = document.querySelectorAll('.weather-btn');
-        btns.forEach(b => {
-            b.classList.toggle('active', b.getAttribute('data-weather') === mode);
-        });
+    function initPhysicsDock() {
+        const dock = document.getElementById('physics-dock');
+        if (!dock) return;
 
-        if (!dioramaMaterials.mGrass) return;
-
-        if (mode === 'golden') {
-            dioramaMaterials.mGrass.color.setHex(0x10b981);
-            dioramaMaterials.mGold.color.setHex(0xf59e0b);
-            document.documentElement.style.setProperty('--color-gold', '#fcd116');
-        } else if (mode === 'lunar') {
-            dioramaMaterials.mGrass.color.setHex(0x064e3b);
-            dioramaMaterials.mGold.color.setHex(0x00f0ff);
-            document.documentElement.style.setProperty('--color-gold', '#00f0ff');
-        } else if (mode === 'cloudy') {
-            dioramaMaterials.mGrass.color.setHex(0x059669);
-            dioramaMaterials.mGold.color.setHex(0xe2e8f0);
-            document.documentElement.style.setProperty('--color-gold', '#e2e8f0');
-        }
-        play8BitChime(880, 0.15);
-    }
-
-    function initWeatherControls() {
-        const btns = document.querySelectorAll('.weather-btn');
-        btns.forEach(btn => {
+        dock.querySelectorAll('.dock-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                applyWeatherBiome(btn.getAttribute('data-weather'));
+                const mode = btn.getAttribute('data-mode');
+                if (mode) {
+                    physicsMode = mode;
+                    dock.querySelectorAll('.dock-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                } else if (btn.id === 'btn-reset') {
+                    physicsMode = 'normal';
+                    dock.querySelectorAll('.dock-btn').forEach(b => b.classList.remove('active'));
+                    if (sceneRefs && sceneRefs.stars) {
+                        sceneRefs.stars.forEach(s => s.mesh.position.copy(s.origPos));
+                    }
+                }
             });
         });
     }
 
     /* ==========================================================================
-       INTERACTIVE CYBERSEC TERMINAL CONSOLE
+       RENDER PROJECTS (STATIC + LIVE GITHUB FETCH)
        ========================================================================== */
-    function initTerminal() {
-        const input = document.getElementById('terminalInput');
-        const output = document.getElementById('terminalOutput');
-        if (!input || !output) return;
+    async function renderProjects() {
+        const container = document.getElementById('projects-container');
+        if (!container) return;
 
-        const cmdHistory = [];
-        let historyIdx = -1;
+        // Render Featured Projects
+        let html = FEATURED_PROJECTS.map(p => `
+            <div class="project-card">
+                <span class="project-badge pixel">${p.badge}</span>
+                <h3 class="pixel">${p.name}</h3>
+                <p>${p.description}</p>
+                <div class="project-tags pixel">
+                    ${p.tags.map(t => `<span class="project-tag">${t}</span>`).join('')}
+                </div>
+                <div class="project-links">
+                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="project-link pixel">View Project</a>
+                </div>
+            </div>
+        `).join('');
 
-        const commands = {
-            help: () => `
-Available Commands:
-  <span class="gold-text">about</span>      - View Gaurav's background & IITK focus
-  <span class="gold-text">projects</span>   - List flagship security tools & repos
-  <span class="gold-text">skills</span>     - Security toolkit & programming languages
-  <span class="gold-text">thm</span>        - Print TryHackMe ranking & room stats
-  <span class="gold-text">leetcode</span>   - Print LeetCode algorithmic progress
-  <span class="gold-text">weather</span>    - Change 3D biome: <span class="cyan-text">weather sunset | lunar | mist</span>
-  <span class="gold-text">socials</span>    - Display contact links & profiles
-  <span class="gold-text">whoami</span>     - Current user session details
-  <span class="gold-text">clear</span>      - Clear terminal screen
-  <span class="gold-text">matrix</span>     - Run matrix binary burst
-`,
-            about: () => `
-<span class="green-text">[+] GAURAV VERMA // B.Cyber @ IIT Kanpur</span>
-Focus Areas: Network Security, Applied Cryptography, AppSec, Reverse Engineering.
-Philosophy: Exploring systems at the binary & protocol level.
-`,
-            projects: () => `
-<span class="gold-text">[+] ARSENAL & REPOSITORIES:</span>
-  1. <strong class="green-text">TrustHouse</strong> - Zero-Trust Identity & Proof Framework
-  2. <strong class="green-text">PassGauge</strong> - Password Entropy & Randomness Auditor
-  3. <strong class="green-text">LinkSleuth</strong> - Automated URL Threat Intelligence
-  4. <strong class="green-text">VaultLock</strong> - AES-GCM-256 Authenticated Secret Vault
-  5. <strong class="green-text">ThreatMind AI</strong> - SOC Anomaly Classification
-  6. <strong class="green-text">SRM Browser Audit</strong> - Process Sandbox Bypass Research
-`,
-            skills: () => `
-<span class="cyan-text">[+] TECHNICAL STACK:</span>
-  Languages:  Python, C, C++, Bash, JavaScript, SQL
-  Tools:      Ghidra, Wireshark, Burp Suite, Nmap, GDB, Docker, Linux
-  Domains:    Cryptography, Network Traffic Analysis, Reverse Engineering, CTFs
-`,
-            thm: () => `
-<span class="green-text">[+] TRYHACKME STATS (@gvbytes):</span>
-  Rank:       <span class="gold-text">TOP 1% Global</span>
-  Rooms:      120+ Completed
-  Focus:      Offensive Labs, Privilege Escalation, Digital Forensics
-`,
-            leetcode: () => `
-<span class="gold-text">[+] LEETCODE PROGRESS (@gvbytes):</span>
-  Problems:   300+ Solved
-  Topics:     Graphs, Trees, Dynamic Programming, Bit Manipulation
-`,
-            whoami: () => `
-User: guest@gvbytes.com
-Access: Authenticated // Level 99 Explorer
-Host: x86_64-iitk-cyberspace
-`,
-            socials: () => `
-Email:     <a href="mailto:contact@gvbytes.com" class="gold-text">contact@gvbytes.com</a>
-GitHub:    <a href="https://github.com/gvbytes" target="_blank" class="cyan-text">https://github.com/gvbytes</a>
-Twitter:   <a href="https://x.com/gvbytes" target="_blank" class="cyan-text">https://x.com/gvbytes</a>
-TryHackMe: <a href="https://tryhackme.com/p/gvbytes" target="_blank" class="green-text">https://tryhackme.com/p/gvbytes</a>
-LeetCode:  <a href="https://leetcode.com/u/gvbytes/" target="_blank" class="gold-text">https://leetcode.com/u/gvbytes/</a>
-`,
-            clear: () => {
-                output.innerHTML = '';
-                return null;
-            },
-            matrix: () => {
-                let lines = '';
-                for (let i = 0; i < 5; i++) {
-                    const bin = Array.from({ length: 32 }, () => Math.random() > 0.5 ? '1' : '0').join('');
-                    lines += `<div class="term-line pixel green-text">${bin}</div>`;
-                }
-                return lines;
-            }
-        };
+        container.innerHTML = html;
 
-        function printLine(html) {
-            if (html === null) return;
-            const line = document.createElement('div');
-            line.className = 'term-line pixel';
-            line.innerHTML = html;
-            output.appendChild(line);
-            output.scrollTop = output.scrollHeight;
-        }
-
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const raw = input.value.trim();
-                input.value = '';
-                if (!raw) return;
-
-                cmdHistory.push(raw);
-                historyIdx = cmdHistory.length;
-
-                printLine(`<span class="green-text">gaurav@iitk:~$</span> ${raw}`);
-                play8BitChime(1046.5, 0.1);
-
-                const parts = raw.toLowerCase().split(' ');
-                const cmd = parts[0];
-                const arg = parts[1];
-
-                if (cmd === 'weather') {
-                    if (arg === 'sunset' || arg === 'golden') {
-                        applyWeatherBiome('golden');
-                        printLine(`<span class="gold-text">[+] Switched 3D biome to SUNSET GOLD.</span>`);
-                    } else if (arg === 'lunar' || arg === 'night' || arg === 'blue') {
-                        applyWeatherBiome('lunar');
-                        printLine(`<span class="cyan-text">[+] Switched 3D biome to NIGHTFALL BLUE.</span>`);
-                    } else if (arg === 'mist' || arg === 'cloudy' || arg === 'alpine') {
-                        applyWeatherBiome('cloudy');
-                        printLine(`<span class="green-text">[+] Switched 3D biome to ALPINE MIST.</span>`);
-                    } else {
-                        printLine(`Usage: weather &lt;sunset | lunar | mist&gt;`);
-                    }
-                } else if (commands[cmd]) {
-                    printLine(commands[cmd]());
-                } else {
-                    printLine(`<span class="red-text">Command not found: ${cmd}. Type 'help' for command manual.</span>`);
-                }
-            } else if (e.key === 'ArrowUp') {
-                if (historyIdx > 0) {
-                    historyIdx--;
-                    input.value = cmdHistory[historyIdx] || '';
-                }
-            } else if (e.key === 'ArrowDown') {
-                if (historyIdx < cmdHistory.length - 1) {
-                    historyIdx++;
-                    input.value = cmdHistory[historyIdx] || '';
-                } else {
-                    historyIdx = cmdHistory.length;
-                    input.value = '';
-                }
-            }
-        });
-    }
-
-    /* ==========================================================================
-       DYNAMIC GITHUB PROJECTS FETCH
-       ========================================================================== */
-    async function fetchGitHubProjects() {
-        const grid = document.getElementById('github-projects-grid');
-        if (!grid) return;
-
+        // Fetch dynamic GitHub repos to append
         try {
             const res = await fetch(`https://api.github.com/users/${GH_USER}/repos?sort=updated&per_page=12`);
-            if (!res.ok) throw new Error('GitHub API Error');
+            if (res.ok) {
+                const repos = await res.json();
+                const filtered = repos.filter(r => !r.fork && !EXCLUDE_REPOS.includes(r.name) && !FEATURED_PROJECTS.some(fp => fp.name.toLowerCase() === r.name.toLowerCase())).slice(0, 4);
 
-            const repos = await res.json();
-            const filtered = repos.filter(r => !r.fork && !EXCLUDE_REPOS.includes(r.name)).slice(0, 6);
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="loading-state pixel">NO PUBLIC REPOS FOUND</div>`;
-                return;
+                filtered.forEach(repo => {
+                    const card = `
+                        <div class="project-card">
+                            <span class="project-badge pixel">GITHUB REPO</span>
+                            <h3 class="pixel">${repo.name}</h3>
+                            <p>${repo.description || 'Open source project by Gaurav Verma.'}</p>
+                            <div class="project-tags pixel">
+                                <span class="project-tag">${repo.language || 'Code'}</span>
+                                <span class="project-tag">★ ${repo.stargazers_count}</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link pixel">GitHub</a>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', card);
+                });
             }
-
-            grid.innerHTML = filtered.map(repo => `
-                <div class="project-card">
-                    <div class="card-top pixel">
-                        <span class="card-badge cyan-badge">[GITHUB // REPO]</span>
-                        <span class="card-lang">${repo.language || 'Code'}</span>
-                    </div>
-                    <h3 class="pixel">${repo.name}</h3>
-                    <p>${repo.description || 'Security and algorithmic repository by Gaurav Verma.'}</p>
-                    <div class="card-tech pixel">
-                        <span>★ ${repo.stargazers_count} Stars</span> • <span>⑂ ${repo.forks_count} Forks</span>
-                    </div>
-                    <div class="card-actions">
-                        <a href="${repo.html_url}" target="_blank" class="card-btn pixel">[VIEW ON GITHUB]</a>
-                    </div>
-                </div>
-            `).join('');
-
-        } catch (e) {
-            grid.innerHTML = `
-                <div class="project-card">
-                    <div class="card-top pixel">
-                        <span class="card-badge cyan-badge">[ARCHIVE]</span>
-                        <span>Python / C++</span>
-                    </div>
-                    <h3 class="pixel">IP-Changer & Network Utilities</h3>
-                    <p>Automated network rotation, routing anonymity scripts, and traffic isolation tools.</p>
-                    <div class="card-actions">
-                        <a href="https://github.com/gvbytes" target="_blank" class="card-btn pixel">[VISIT GITHUB PROFILE]</a>
-                    </div>
-                </div>
-            `;
-        }
+        } catch (e) {}
     }
 
     /* ==========================================================================
-       TRYHACKME & LEETCODE STATS DATA FEEDS
+       LOAD TRYHACKME & LEETCODE STATS
        ========================================================================== */
-    async function loadStatsData() {
-        // Load TryHackMe
+    async function loadStats() {
+        // TryHackMe
         try {
             const res = await fetch('data/tryhackme.json');
             if (res.ok) {
                 const data = await res.json();
-                if (data.rank) {
-                    document.getElementById('thmRankDisplay').textContent = data.rank;
-                    document.getElementById('hudThmRank').textContent = data.rank;
+                const list = document.getElementById('thm-rooms-list');
+                if (list && data.recentRooms) {
+                    list.innerHTML = data.recentRooms.map(r => `<li>✔ ${r}</li>`).join('');
                 }
-                if (data.rooms) document.getElementById('thmRoomsDisplay').textContent = data.rooms;
-                if (data.points) document.getElementById('thmPointsDisplay').textContent = data.points;
+                if (data.badgeUrl) {
+                    const badgeImg = document.getElementById('thm-badge-img');
+                    const badgeBox = document.getElementById('thm-badge-container');
+                    if (badgeImg && badgeBox) {
+                        badgeImg.src = data.badgeUrl;
+                        badgeImg.style.display = 'block';
+                        badgeBox.style.display = 'block';
+                    }
+                }
             }
         } catch (e) {}
 
-        // Load LeetCode
+        // LeetCode
         try {
             const res = await fetch('data/leetcode.json');
             if (res.ok) {
                 const data = await res.json();
-                if (data.totalSolved) {
-                    document.getElementById('lcSolvedDisplay').textContent = data.totalSolved;
-                    document.getElementById('hudLeetCode').textContent = `${data.totalSolved} SOLVED`;
+                const statsDiv = document.getElementById('lc-stats');
+                if (statsDiv) {
+                    statsDiv.innerHTML = `
+                        <p>Total Solved: <strong class="gold-text">${data.totalSolved || '300+'}</strong></p>
+                        <p>Easy: <span class="green-text">${data.easySolved || '110+'}</span> | Medium: <span class="cyan-text">${data.mediumSolved || '160+'}</span></p>
+                    `;
                 }
-                if (data.easySolved) document.getElementById('lcEasyDisplay').textContent = `Easy: ${data.easySolved}`;
-                if (data.mediumSolved) document.getElementById('lcMediumDisplay').textContent = `Med: ${data.mediumSolved}`;
             }
         } catch (e) {}
     }
 
     /* ==========================================================================
-       CERTIFICATE MODAL & HUD TOGGLES
+       BACK TO TOP BUTTON
        ========================================================================== */
-    function initModalsAndToggles() {
-        // Certificate Modal
-        const viewCertBtn = document.getElementById('viewCertBtn');
-        const modal = document.getElementById('certModal');
-        const closeBtn = document.getElementById('closeModalBtn');
+    function initBackToTop() {
+        const btn = document.getElementById('back-to-top');
+        if (!btn) return;
 
-        if (viewCertBtn && modal) {
-            viewCertBtn.addEventListener('click', () => {
-                modal.classList.add('open');
-                play8BitChime(1174.66, 0.2);
-            });
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    modal.classList.remove('open');
-                });
-            }
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) modal.classList.remove('open');
-            });
-        }
+        window.addEventListener('scroll', () => {
+            btn.classList.toggle('visible', window.scrollY > 400);
+        });
 
-        // CRT Toggle
-        const crtToggle = document.getElementById('crtToggle');
-        const crtOverlay = document.querySelector('.crt-scanlines');
-        if (crtToggle && crtOverlay) {
-            crtToggle.addEventListener('click', () => {
-                crtOverlay.classList.toggle('disabled');
-                crtToggle.textContent = crtOverlay.classList.contains('disabled') ? '[CRT: OFF]' : '[CRT: ON]';
-                play8BitChime(523.25, 0.1);
-            });
-        }
-
-        // Audio Toggle
-        const audioToggle = document.getElementById('audioToggle');
-        if (audioToggle) {
-            audioToggle.addEventListener('click', () => {
-                audioEnabled = !audioEnabled;
-                audioToggle.textContent = audioEnabled ? '[SFX: ON]' : '[SFX: OFF]';
-                if (audioEnabled) play8BitChime(1318.51, 0.15);
-            });
-        }
+        btn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     }
 
-    // Initialize all components on DOMContentLoaded
+    // Initialize on DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
-        if (window.lucide) lucide.createIcons();
-        init3DVoxelEngine();
-        initWeatherControls();
-        initTerminal();
-        fetchGitHubProjects();
-        loadStatsData();
-        initModalsAndToggles();
+        initTheme();
+        init3DScene();
+        initPhysicsDock();
+        renderProjects();
+        loadStats();
+        initBackToTop();
     });
 
 })();
