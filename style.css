@@ -1,6 +1,6 @@
 /* ==========================================================================
    GVBYTES.COM — 16-BIT VOXEL & SLEEK TERMINAL HYBRID DESIGN
-   Zero generic purple gradients • Retro Voxel HUD • True DOM Text Physics
+   Zero generic purple gradients • Clean Retro Typography • Real DOM Text Physics
    ========================================================================== */
 
 :root,
@@ -83,20 +83,6 @@ body {
     pointer-events: auto;
 }
 
-/* CRT Scanline Overlay */
-.crt-scanlines {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-    background-size: 100% 4px;
-    pointer-events: none;
-    z-index: 40;
-    opacity: 0.35;
-}
-
 .container {
     max-width: 1140px;
     margin: 0 auto;
@@ -105,58 +91,50 @@ body {
     z-index: 10;
 }
 
-/* Retro Top Telemetry HUD */
-.retro-hud {
+/* Navigation */
+#navbar {
     position: sticky;
     top: 0;
     z-index: 100;
     background: var(--bg-hud);
     border-bottom: 3px solid var(--border-brick);
     backdrop-filter: blur(14px);
-    padding: 12px 24px;
+    padding: 14px 0;
+}
+
+.nav-container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-.hud-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.hud-logo {
-    font-size: 1rem;
+.nav-logo {
+    font-size: 1.1rem;
     color: var(--text-primary);
     text-decoration: none;
     letter-spacing: -0.02em;
 }
 
-.hud-badge {
-    font-size: 0.65rem;
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-link {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 10px;
+    transition: color 0.2s, background 0.2s;
+}
+
+.nav-link:hover {
     color: var(--color-gold);
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid var(--border-dim);
-    padding: 2px 8px;
+    background: rgba(245, 158, 11, 0.08);
 }
-
-.hud-stats {
-    display: flex;
-    gap: 14px;
-}
-
-.stat-box {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.68rem;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 4px 10px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.stat-lbl { color: var(--text-muted); }
 
 .theme-toggle {
     background: rgba(0, 0, 0, 0.4);
@@ -172,42 +150,6 @@ body {
     background: var(--color-gold);
     color: #000;
     border-color: #fff;
-}
-
-/* Navigation */
-#navbar {
-    background: rgba(6, 8, 14, 0.85);
-    border-bottom: 2px dashed var(--border-dim);
-    padding: 10px 0;
-    position: relative;
-    z-index: 90;
-}
-
-.nav-container {
-    max-width: 1140px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    overflow-x: auto;
-}
-
-.nav-links {
-    display: flex;
-    gap: 20px;
-    white-space: nowrap;
-}
-
-.nav-link {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    padding: 6px 10px;
-    transition: color 0.2s, background 0.2s;
-}
-
-.nav-link:hover {
-    color: var(--color-gold);
-    background: rgba(245, 158, 11, 0.08);
 }
 
 /* Hero Section */
@@ -237,7 +179,7 @@ body {
     box-shadow: 3px 3px 0px var(--border-brick);
 }
 
-.badge-dot {
+.badge-pulse-dot {
     width: 6px;
     height: 6px;
     background: var(--color-gold);
@@ -260,46 +202,9 @@ body {
 }
 
 .hero-tagline {
-    font-size: 1.8rem;
+    font-size: 1.25rem;
     color: var(--text-muted);
-    margin-bottom: 26px;
-}
-
-/* Weather Controls */
-.weather-controls {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
     margin-bottom: 32px;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 8px 16px;
-    border: 1px solid var(--border-dim);
-    width: fit-content;
-    box-shadow: 3px 3px 0px #000;
-}
-
-.ctrl-lbl {
-    font-size: 0.7rem;
-    color: var(--color-gold);
-}
-
-.weather-btn {
-    background: transparent;
-    border: 1px solid var(--border-dim);
-    color: var(--text-muted);
-    font-size: 0.68rem;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: inherit;
-}
-
-.weather-btn.active, .weather-btn:hover {
-    background: var(--color-gold);
-    color: #000;
-    border-color: #fff;
-    font-weight: bold;
 }
 
 /* Buttons */
@@ -447,11 +352,11 @@ body {
     line-height: 1.4;
 }
 
-.bio-code-box {
+.bio-footer-code {
     background: rgba(0, 0, 0, 0.7);
     border: 1px solid var(--border-dim);
-    padding: 12px 18px;
-    font-size: 1.4rem;
+    padding: 10px 16px;
+    font-size: 1rem;
     width: fit-content;
 }
 
@@ -496,14 +401,12 @@ body {
 .dot-green  { background: #28c840; }
 
 .terminal-title {
-    font-family: 'JetBrains Mono', monospace;
     font-size: 0.78rem;
     color: var(--text-muted);
 }
 
 .terminal-body {
     padding: 24px;
-    font-family: 'JetBrains Mono', monospace;
     font-size: 0.92rem;
     line-height: 2.0;
 }
@@ -532,7 +435,14 @@ body {
     color: var(--color-green);
 }
 
-/* Projects Grid */
+/* Projects Section */
+.project-group-title {
+    font-size: 0.95rem;
+    color: var(--color-gold);
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+}
+
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -542,11 +452,12 @@ body {
 .project-card {
     background: var(--bg-card);
     border: 3px solid var(--border-brick);
-    padding: 28px;
+    padding: 24px;
     box-shadow: 5px 5px 0px #000;
     transition: all 0.2s ease;
     display: flex;
     flex-direction: column;
+    text-decoration: none;
 }
 
 .project-card:hover {
@@ -565,54 +476,34 @@ body {
     margin-bottom: 12px;
 }
 
-.project-card h3 {
+.project-card-title {
     font-size: 1rem;
     color: var(--text-primary);
     margin-bottom: 10px;
 }
 
-.project-card p {
+.project-card-desc {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     line-height: 1.6;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     flex: 1;
 }
 
-.project-tags {
+.project-card-footer {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 20px;
-}
-
-.project-tag {
-    font-size: 0.65rem;
+    align-items: center;
+    font-size: 0.72rem;
     color: var(--color-green);
-    background: rgba(16, 185, 129, 0.08);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    padding: 3px 8px;
+    border-top: 1px solid var(--border-dim);
+    padding-top: 12px;
 }
 
-.project-links {
-    display: flex;
-    gap: 12px;
-}
-
-.project-link {
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid var(--border-dim);
-    color: #fff;
-    font-size: 0.68rem;
-    padding: 8px 12px;
-    text-decoration: none;
-    transition: all 0.2s;
-}
-
-.project-link:hover {
-    background: var(--color-gold);
-    color: #000;
-    border-color: #fff;
+.project-lang-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 6px 0 12px;
 }
 
 /* Learning & Stats */
@@ -654,10 +545,12 @@ body {
 }
 
 .learning-profile-link {
-    font-size: 1.3rem;
+    font-size: 0.95rem;
     color: var(--color-cyan);
     text-decoration: none;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     margin-bottom: 16px;
 }
 
@@ -667,9 +560,9 @@ body {
 
 .learning-items, .leetcode-stats {
     list-style: none;
-    font-size: 1.25rem;
+    font-size: 0.95rem;
     color: var(--text-secondary);
-    line-height: 1.6;
+    line-height: 1.8;
 }
 
 /* Certifications */
@@ -708,7 +601,7 @@ body {
 }
 
 .cert-meta {
-    font-size: 1.2rem;
+    font-size: 0.85rem;
     color: var(--color-gold);
     margin-bottom: 12px;
 }
@@ -757,7 +650,7 @@ body {
 }
 
 .social-handle {
-    font-size: 1.4rem;
+    font-size: 1rem;
     color: var(--color-green);
 }
 
@@ -767,7 +660,7 @@ body {
 
 .footer-bottom {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
     padding: 20px 0;
     border-top: 1px solid var(--border-dim);

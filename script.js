@@ -1,6 +1,6 @@
 /**
- * GVBYTES.COM — Unified 16-Bit Voxel Sky-Isle Diorama & Real DOM Text Physics Engine
- * Zero purple gradients • Sleek Terminal • Interactive 3D Biome Controls
+ * GVBYTES.COM — Authentic 16-Bit Voxel Theme & Real DOM Text Physics Engine
+ * Zero purple gradients • Sleek Terminal • Strictly Public Non-Forked Repos
  */
 
 (function () {
@@ -8,58 +8,6 @@
 
     const GH_USER = 'gvbytes';
     const EXCLUDE_REPOS = ['gvbytes', 'gaurav-portfolio'];
-
-    // Featured Security Projects
-    const FEATURED_PROJECTS = [
-        {
-            name: "TrustHouse",
-            badge: "FLAGSHIP // SECURITY",
-            lang: "Python",
-            description: "A secure, transparent authentication and verification framework engineered for verifiable data exchanges and zero-trust identity architectures.",
-            tags: ["Zero-Trust", "Cryptography", "Verification"],
-            url: "https://github.com/gvbytes/trusthouse"
-        },
-        {
-            name: "PassGauge",
-            badge: "TOOL // ENTROPY",
-            lang: "Python",
-            description: "Advanced password entropy calculator and pattern strength auditor evaluating mathematical randomness and brute-force resistance.",
-            tags: ["Entropy Analysis", "Heuristics"],
-            url: "https://github.com/gvbytes/passgauge"
-        },
-        {
-            name: "LinkSleuth",
-            badge: "THREAT INTEL",
-            lang: "Python",
-            description: "Automated URL analysis and phishing threat intelligence scanner inspecting redirection chains, domain heuristics, SSL validity, and payload indicators.",
-            tags: ["OSINT", "Phishing Detection"],
-            url: "https://github.com/gvbytes/linksleuth"
-        },
-        {
-            name: "VaultLock",
-            badge: "CRYPTOGRAPHY",
-            lang: "Python / Cryptography",
-            description: "Local encrypted secret store utilizing authenticated AES-GCM-256 and Argon2 key derivation for secure credential isolation and zero plaintext exposure.",
-            tags: ["AES-256-GCM", "Argon2id"],
-            url: "https://github.com/gvbytes/vaultlock"
-        },
-        {
-            name: "ThreatMind AI",
-            badge: "AI & SEC",
-            lang: "Python / ML",
-            description: "Machine learning and anomaly detection pipeline classifying suspicious network log records and telemetry vectors for automated SOC alert triaging.",
-            tags: ["Anomaly Detection", "SOC Triage"],
-            url: "https://github.com/gvbytes/threatmind-ai"
-        },
-        {
-            name: "SRM Secure Browser Audit",
-            badge: "RESEARCH REPORT",
-            lang: "Security Audit",
-            description: "Detailed vulnerability analysis and penetration testing report discovering process isolation and integrity bypass flaws in proctored browser software.",
-            tags: ["AppSec", "Sandbox Bypass"],
-            url: "srm-secure-browser-report.html"
-        }
-    ];
 
     /* ==========================================================================
        THEME TOGGLE
@@ -80,10 +28,8 @@
     }
 
     /* ==========================================================================
-       3D VOXEL SKY-ISLE DIORAMA BACKGROUND & WEATHER CONTROLLER
+       3D VOXEL SKY-ISLE DIORAMA BACKGROUND
        ========================================================================== */
-    let dioramaMaterials = {};
-
     function init3DVoxelScene() {
         const canvas = document.getElementById('hero-canvas');
         if (!canvas || !window.THREE) return;
@@ -107,14 +53,14 @@
         const vGeo = new THREE.BoxGeometry(vSize, vSize, vSize);
 
         // Voxel materials (No purple!)
-        dioramaMaterials.mGrass = new THREE.MeshBasicMaterial({ color: 0x10b981 });
-        dioramaMaterials.mDirt = new THREE.MeshBasicMaterial({ color: 0x27272a });
-        dioramaMaterials.mStone = new THREE.MeshBasicMaterial({ color: 0x52525b });
-        dioramaMaterials.mGold = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
-        dioramaMaterials.mWhite = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        dioramaMaterials.mTree = new THREE.MeshBasicMaterial({ color: 0x059669 });
-        dioramaMaterials.mTrunk = new THREE.MeshBasicMaterial({ color: 0x78350f });
-        dioramaMaterials.mWater = new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.85 });
+        const mGrass = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+        const mDirt = new THREE.MeshBasicMaterial({ color: 0x27272a });
+        const mStone = new THREE.MeshBasicMaterial({ color: 0x52525b });
+        const mGold = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+        const mWhite = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const mTree = new THREE.MeshBasicMaterial({ color: 0x059669 });
+        const mTrunk = new THREE.MeshBasicMaterial({ color: 0x78350f });
+        const mWater = new THREE.MeshBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.85 });
 
         // Island base
         const radius = 6;
@@ -124,8 +70,8 @@
                 if (dist <= radius) {
                     const depth = Math.floor((radius - dist) * 0.8) + 1;
                     for (let y = 0; y >= -depth; y--) {
-                        let mat = (y === 0) ? dioramaMaterials.mGrass : ((y === -depth) ? dioramaMaterials.mStone : dioramaMaterials.mDirt);
-                        if (x === 3 && y === 0) mat = dioramaMaterials.mWater;
+                        let mat = (y === 0) ? mGrass : ((y === -depth) ? mStone : mDirt);
+                        if (x === 3 && y === 0) mat = mWater;
                         const block = new THREE.Mesh(vGeo, mat);
                         block.position.set(x * vSize, y * vSize, z * vSize);
                         diorama.add(block);
@@ -138,7 +84,7 @@
         const treeX = -2 * vSize;
         const treeZ = -1 * vSize;
         for (let y = 1; y <= 3; y++) {
-            const trunk = new THREE.Mesh(vGeo, dioramaMaterials.mTrunk);
+            const trunk = new THREE.Mesh(vGeo, mTrunk);
             trunk.position.set(treeX, y * vSize, treeZ);
             diorama.add(trunk);
         }
@@ -146,7 +92,7 @@
             for (let fz = -1; fz <= 1; fz++) {
                 for (let fy = 4; fy <= 6; fy++) {
                     if (fy === 6 && (Math.abs(fx) + Math.abs(fz) > 0)) continue;
-                    const leaf = new THREE.Mesh(vGeo, dioramaMaterials.mTree);
+                    const leaf = new THREE.Mesh(vGeo, mTree);
                     leaf.position.set(treeX + fx * vSize, fy * vSize, treeZ + fz * vSize);
                     diorama.add(leaf);
                 }
@@ -159,7 +105,7 @@
             for (let px = -pR; px <= pR; px++) {
                 for (let pz = -pR; pz <= pR; pz++) {
                     if (Math.abs(px) + Math.abs(pz) <= pR) {
-                        const rock = new THREE.Mesh(vGeo, my === 4 ? dioramaMaterials.mWhite : dioramaMaterials.mStone);
+                        const rock = new THREE.Mesh(vGeo, my === 4 ? mWhite : mStone);
                         rock.position.set((px + 2) * vSize, my * vSize, (pz + 1) * vSize);
                         diorama.add(rock);
                     }
@@ -176,7 +122,7 @@
             for (let my = -1; my <= 1; my++) {
                 for (let mz = -1; mz <= 1; mz++) {
                     if (Math.abs(mx) + Math.abs(my) + Math.abs(mz) <= 2) {
-                        const mB = new THREE.Mesh(vGeo, dioramaMaterials.mGold);
+                        const mB = new THREE.Mesh(vGeo, mGold);
                         mB.position.set(mx * vSize, my * vSize, mz * vSize);
                         moonRig.add(mB);
                     }
@@ -189,7 +135,7 @@
         const cloudRig = new THREE.Group();
         for (let cx = -2; cx <= 2; cx++) {
             for (let cz = -1; cz <= 1; cz++) {
-                const cB = new THREE.Mesh(vGeo, dioramaMaterials.mWhite);
+                const cB = new THREE.Mesh(vGeo, mWhite);
                 cB.position.set(cx * vSize, Math.sin(cx) * 0.2, cz * vSize);
                 cloudRig.add(cB);
             }
@@ -228,32 +174,6 @@
             renderer.render(scene, camera);
         }
         animate();
-    }
-
-    function initWeatherControls() {
-        const btns = document.querySelectorAll('.weather-btn');
-        btns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const mode = btn.getAttribute('data-weather');
-                btns.forEach(b => b.classList.toggle('active', b === btn));
-
-                if (!dioramaMaterials.mGrass) return;
-
-                if (mode === 'golden') {
-                    dioramaMaterials.mGrass.color.setHex(0x10b981);
-                    dioramaMaterials.mGold.color.setHex(0xf59e0b);
-                    document.documentElement.style.setProperty('--color-gold', '#fcd116');
-                } else if (mode === 'lunar') {
-                    dioramaMaterials.mGrass.color.setHex(0x064e3b);
-                    dioramaMaterials.mGold.color.setHex(0x00d4ff);
-                    document.documentElement.style.setProperty('--color-gold', '#00d4ff');
-                } else if (mode === 'cloudy') {
-                    dioramaMaterials.mGrass.color.setHex(0x059669);
-                    dioramaMaterials.mGold.color.setHex(0xe2e8f0);
-                    document.documentElement.style.setProperty('--color-gold', '#e2e8f0');
-                }
-            });
-        });
     }
 
     /* ==========================================================================
@@ -740,57 +660,136 @@
     }
 
     /* ==========================================================================
-       RENDER PROJECTS (STATIC + LIVE GITHUB FETCH)
+       RENDER PROJECTS STRICTLY FROM PUBLIC, NON-FORKED GITHUB REPOS
        ========================================================================== */
+    function getLangColor(lang) {
+        const colors = {
+            'JavaScript': '#f1e05a', 'Python': '#3572A5', 'HTML': '#e34c26',
+            'CSS': '#563d7c', 'TypeScript': '#3178c6', 'Shell': '#89e051',
+            'Go': '#00ADD8', 'Rust': '#dea584', 'C': '#555555',
+            'C++': '#f34b7d', 'Java': '#b07219', 'Ruby': '#701516',
+        };
+        return colors[lang] || 'var(--color-gold)';
+    }
+
+    function createProjectCard(project, index) {
+        const card = document.createElement('a');
+        card.href = project.html_url || `https://github.com/${GH_USER}/${project.name}`;
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
+        card.className = 'project-card animate-on-scroll';
+        card.style.transitionDelay = `${index * 0.05}s`;
+        card.id = `project-${project.name}`;
+
+        const lang = project.language || '';
+        const stars = project.stargazers_count || 0;
+        const desc = project.description || 'View on GitHub →';
+
+        let footerExtra = '';
+        if (lang) {
+            footerExtra += `<span class="project-lang-dot" style="background: ${getLangColor(lang)}"></span><span class="pixel">${lang}</span>`;
+        }
+        if (stars > 0) {
+            footerExtra += `<span class="pixel" style="margin-left:auto;display:inline-flex;align-items:center;gap:4px;">★ ${stars}</span>`;
+        }
+
+        card.innerHTML = `
+            <div class="project-card-header">
+                <span class="project-badge pixel">PUBLIC REPO</span>
+            </div>
+            <h3 class="project-card-title pixel">${project.name}</h3>
+            <p class="project-card-desc">${desc}</p>
+            <div class="project-card-footer">
+                <span class="mono">${GH_USER}/${project.name}</span>
+                ${footerExtra}
+            </div>`;
+        return card;
+    }
+
+    async function fetchGitHubRepos() {
+        try {
+            // Using unauthenticated public GitHub API which ONLY exposes public repositories
+            const res = await fetch(`https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=updated`);
+            if (!res.ok) throw new Error(res.status);
+            const repos = await res.json();
+            // Strictly exclude forked repos and self profile repo
+            const filtered = repos.filter(r => !r.fork && !EXCLUDE_REPOS.includes(r.name));
+            return filtered;
+        } catch (_) {
+            return null;
+        }
+    }
+
     async function renderProjects() {
         const container = document.getElementById('projects-container');
         if (!container) return;
 
-        let html = '<div class="projects-grid">';
-        html += FEATURED_PROJECTS.map(p => `
-            <div class="project-card">
-                <span class="project-badge pixel">${p.badge}</span>
-                <h3 class="pixel">${p.name}</h3>
-                <p>${p.description}</p>
-                <div class="project-tags pixel">
-                    ${p.tags.map(t => `<span class="project-tag">${t}</span>`).join('')}
-                </div>
-                <div class="project-links">
-                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="project-link pixel">[VIEW PROJECT]</a>
-                </div>
-            </div>
-        `).join('');
-        html += '</div>';
+        container.innerHTML = '<p class="mono loading" style="text-align:center;padding:40px 0;color:var(--text-muted);">Loading public repositories from GitHub…</p>';
 
-        container.innerHTML = html;
+        const repos = await fetchGitHubRepos();
+        container.innerHTML = '';
 
-        // Fetch dynamic GitHub repos to append
-        try {
-            const res = await fetch(`https://api.github.com/users/${GH_USER}/repos?sort=updated&per_page=12`);
-            if (res.ok) {
-                const repos = await res.json();
-                const filtered = repos.filter(r => !r.fork && !EXCLUDE_REPOS.includes(r.name) && !FEATURED_PROJECTS.some(fp => fp.name.toLowerCase() === r.name.toLowerCase())).slice(0, 4);
+        if (!repos || repos.length === 0) {
+            container.innerHTML = '<p class="mono" style="text-align:center;color:var(--text-muted);">Could not load public repositories. <a href="https://github.com/gvbytes" target="_blank" style="color:var(--color-gold);">View on GitHub →</a></p>';
+            return;
+        }
 
-                const grid = container.querySelector('.projects-grid');
-                filtered.forEach(repo => {
-                    const card = `
-                        <div class="project-card">
-                            <span class="project-badge pixel">GITHUB REPO</span>
-                            <h3 class="pixel">${repo.name}</h3>
-                            <p>${repo.description || 'Open source project by Gaurav Verma.'}</p>
-                            <div class="project-tags pixel">
-                                <span class="project-tag">${repo.language || 'Code'}</span>
-                                <span class="project-tag">★ ${repo.stargazers_count}</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link pixel">[GITHUB]</a>
-                            </div>
-                        </div>
-                    `;
-                    grid.insertAdjacentHTML('beforeend', card);
-                });
+        // Categorize into groups
+        const vulnMapped = ['srm-secure-browser-vulnerabilities', 'srm-secure-browser-review'];
+        const otherMapped = ['del-and-bits', 'del-bits', 'del&bits', 'gaurav-portfolio'];
+
+        const cyberRepos = [];
+        const vulnRepos = [];
+        const otherRepos = [];
+
+        repos.forEach((repo) => {
+            const nameLower = repo.name.toLowerCase();
+            if (vulnMapped.includes(nameLower)) {
+                vulnRepos.push(repo);
+            } else if (otherMapped.includes(nameLower)) {
+                otherRepos.push(repo);
+            } else {
+                cyberRepos.push(repo);
             }
-        } catch (e) {}
+        });
+
+        if (cyberRepos.length > 0) {
+            const h3 = document.createElement('h3');
+            h3.className = 'project-group-title pixel';
+            h3.innerHTML = `Cybersecurity Tools and Analysis`;
+            container.appendChild(h3);
+
+            const grid = document.createElement('div');
+            grid.className = 'projects-grid';
+            cyberRepos.forEach((repo, i) => grid.appendChild(createProjectCard(repo, i)));
+            container.appendChild(grid);
+        }
+
+        if (vulnRepos.length > 0) {
+            const h3 = document.createElement('h3');
+            h3.className = 'project-group-title pixel';
+            h3.style.marginTop = '48px';
+            h3.innerHTML = `Vulnerability Analysis`;
+            container.appendChild(h3);
+
+            const grid = document.createElement('div');
+            grid.className = 'projects-grid';
+            vulnRepos.forEach((repo, i) => grid.appendChild(createProjectCard(repo, i)));
+            container.appendChild(grid);
+        }
+
+        if (otherRepos.length > 0) {
+            const h3 = document.createElement('h3');
+            h3.className = 'project-group-title pixel';
+            h3.style.marginTop = '48px';
+            h3.innerHTML = `Other Projects`;
+            container.appendChild(h3);
+
+            const grid = document.createElement('div');
+            grid.className = 'projects-grid';
+            otherRepos.forEach((repo, i) => grid.appendChild(createProjectCard(repo, i)));
+            container.appendChild(grid);
+        }
     }
 
     /* ==========================================================================
@@ -803,18 +802,14 @@
             if (res.ok) {
                 const data = await res.json();
                 const list = document.getElementById('thm-rooms-list');
-                if (list && data.recentRooms) {
-                    list.innerHTML = data.recentRooms.map(r => `<li>✔ ${r}</li>`).join('');
+                if (list && data.completed_rooms) {
+                    list.innerHTML = data.completed_rooms.map(r => `<li>✔ ${r.title || r}</li>`).join('');
                 }
-                if (data.rank) {
-                    const hud = document.getElementById('hudThmRank');
-                    if (hud) hud.textContent = data.rank;
-                }
-                if (data.badgeUrl) {
+                if (data.badge_image_path) {
                     const badgeImg = document.getElementById('thm-badge-img');
                     const badgeBox = document.getElementById('thm-badge-container');
                     if (badgeImg && badgeBox) {
-                        badgeImg.src = data.badgeUrl;
+                        badgeImg.src = data.badge_image_path;
                         badgeImg.style.display = 'block';
                         badgeBox.style.display = 'block';
                     }
@@ -830,13 +825,9 @@
                 const statsDiv = document.getElementById('lc-stats');
                 if (statsDiv) {
                     statsDiv.innerHTML = `
-                        <p>Total Solved: <strong class="gold-text">${data.totalSolved || '300+'}</strong></p>
-                        <p>Easy: <span class="green-text">${data.easySolved || '110+'}</span> | Medium: <span class="cyan-text">${data.mediumSolved || '160+'}</span></p>
+                        <p>Total Solved: <strong class="gold-text">${data.total_solved || data.totalSolved || '0'}</strong></p>
+                        <p>Easy: <span class="green-text">${data.easy_solved || data.easySolved || '0'}</span> | Medium: <span class="cyan-text">${data.medium_solved || data.mediumSolved || '0'}</span></p>
                     `;
-                }
-                if (data.totalSolved) {
-                    const hud = document.getElementById('hudLeetCode');
-                    if (hud) hud.textContent = `${data.totalSolved} SOLVED`;
                 }
             }
         } catch (e) {}
@@ -862,7 +853,6 @@
     document.addEventListener('DOMContentLoaded', () => {
         initThemeToggle();
         init3DVoxelScene();
-        initWeatherControls();
         renderProjects();
         loadStats();
         initTextPhysics();
