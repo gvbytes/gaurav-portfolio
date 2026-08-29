@@ -924,17 +924,14 @@ h1 {
     }
 }
 
+.btn-text-full { display: inline; }
+.btn-text-short { display: none; }
+
 .dock-buttons {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
     justify-content: center;
-}
-
-@media (max-width: 480px) {
-    .dock-buttons {
-        gap: 4px;
-    }
 }
 
 .dock-hud-btn {
@@ -947,10 +944,32 @@ h1 {
     transition: all 0.15s;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
+    .btn-text-full {
+        display: none !important;
+    }
+    .btn-text-short {
+        display: inline !important;
+        font-weight: bold;
+    }
+    .voxel-physics-dock {
+        bottom: 14px;
+        padding: 5px 8px;
+        max-width: calc(100vw - 16px);
+    }
+    .dock-buttons {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 6px !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
     .dock-hud-btn {
-        font-size: 0.95rem;
-        padding: 5px 7px;
+        font-size: 1.15rem !important;
+        padding: 6px 10px !important;
+        min-width: 38px !important;
+        text-align: center !important;
+        line-height: 1 !important;
     }
 }
 
