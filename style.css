@@ -194,12 +194,58 @@ body {
     background: rgba(245, 158, 11, 0.12);
 }
 
+.nav-discord-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(88, 101, 242, 0.12);
+    border: 1px solid #5865F2;
+    color: #5865F2;
+    padding: 5px 12px;
+    font-size: 1.15rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    z-index: 2;
+    line-height: 1;
+}
+
+.nav-discord-btn:hover {
+    background: #5865F2;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(88, 101, 242, 0.5);
+    transform: translateY(-1px);
+}
+
+.discord-icon {
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.nav-discord-mobile {
+    display: none !important;
+}
+
 .nav-toggle {
     display: none;
 }
 
 /* Sleek Thin Mobile Header */
 @media (max-width: 860px) {
+    .nav-discord-btn {
+        display: none !important;
+    }
+    .nav-discord-mobile {
+        display: flex !important;
+        color: #5865F2 !important;
+        background: rgba(88, 101, 242, 0.08);
+        border-top: 1px dashed rgba(88, 101, 242, 0.3) !important;
+        margin-top: 4px;
+    }
+    .nav-discord-mobile:hover {
+        background: #5865F2 !important;
+        color: #fff !important;
+    }
     #navbar {
         padding: 10px 0;
         border-bottom: 1px solid rgba(245, 158, 11, 0.2);
