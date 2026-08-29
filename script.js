@@ -892,10 +892,41 @@
         btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
 
+    function initMobileNav() {
+        const toggleBtn = document.getElementById('nav-toggle');
+        const toggleText = document.getElementById('nav-toggle-text');
+        const navLinks = document.getElementById('nav-links');
+        if (!toggleBtn || !navLinks) return;
+
+        function closeNav() {
+            navLinks.classList.remove('open');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            if (toggleText) toggleText.textContent = '[MENU]';
+        }
+
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = navLinks.classList.toggle('open');
+            toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            if (toggleText) toggleText.textContent = isOpen ? '[✕ CLOSE]' : '[MENU]';
+        });
+
+        navLinks.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', closeNav);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+                closeNav();
+            }
+        });
+    }
+
     /* ==========================================================================
        INITIALIZATION
        ========================================================================== */
     document.addEventListener('DOMContentLoaded', () => {
+        initMobileNav();
         init3DScene();
         renderProjects();
         loadTHMBadge();
