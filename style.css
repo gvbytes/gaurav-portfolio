@@ -504,6 +504,8 @@ h1 {
     border-top: 1px dashed var(--border-dim);
     position: relative;
     z-index: 10;
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 400px;
 }
 
 @media (max-width: 768px) {

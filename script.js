@@ -23,9 +23,9 @@
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 8, 24);
 
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: 'high-performance' });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
         // Master Diorama Island Group
         const diorama = new THREE.Group();
@@ -145,7 +145,7 @@
         window.addEventListener('mousemove', (e) => {
             mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
             mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
+        }, { passive: true });
 
         window.addEventListener('resize', () => {
             const isNowMobile = window.innerWidth < 768;
@@ -153,10 +153,17 @@
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        }, { passive: true });
+
+        let isTabVisible = true;
+        document.addEventListener('visibilitychange', () => {
+            isTabVisible = !document.hidden;
+            if (isTabVisible) requestAnimationFrame(animate);
+        }, { passive: true });
 
         let time = 0;
         function animate() {
+            if (!isTabVisible) return;
             requestAnimationFrame(animate);
             time += 0.015;
 
@@ -175,7 +182,7 @@
 
             renderer.render(scene, camera);
         }
-        animate();
+        requestAnimationFrame(animate);
     }
 
     /* ==========================================================================
@@ -923,15 +930,33 @@
     }
 
     /* ==========================================================================
-       INITIALIZATION
+       INITIALIZATION (PERFORMANCE & LIGHTHOUSE OPTIMIZED)
        ========================================================================== */
-    document.addEventListener('DOMContentLoaded', () => {
+    function bootstrap() {
         initMobileNav();
-        init3DScene();
-        renderProjects();
-        loadTHMBadge();
-        initTextPhysics();
         initBackToTop();
-    });
+        initTextPhysics();
+
+        // Defer 3D Scene compilation & background API fetches to maximize FCP/LCP
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+                init3DScene();
+                renderProjects();
+                loadTHMBadge();
+            }, { timeout: 1200 });
+        } else {
+            setTimeout(() => {
+                init3DScene();
+                renderProjects();
+                loadTHMBadge();
+            }, 40);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+        bootstrap();
+    }
 
 })();
