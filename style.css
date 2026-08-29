@@ -203,22 +203,7 @@ body {
     }
 }
 
-.hud-btn {
-    background: var(--dock-btn-bg);
-    border: 1px solid var(--dock-btn-border);
-    color: var(--accent);
-    font-size: 1.15rem;
-    padding: 6px 14px;
-    cursor: pointer;
-    box-shadow: 2px 2px 0px var(--shadow-color);
-    transition: all 0.2s;
-}
 
-.hud-btn:hover {
-    background: var(--accent);
-    color: #000;
-    border-color: var(--shadow-color);
-}
 
 /* Hero Section */
 .hero {
