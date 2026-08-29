@@ -148,6 +148,8 @@
         });
 
         window.addEventListener('resize', () => {
+            const isNowMobile = window.innerWidth < 768;
+            diorama.position.x = isNowMobile ? 0 : 7.2;
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
