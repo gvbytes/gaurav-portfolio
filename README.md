@@ -1,36 +1,37 @@
 # gvbytes.com
 
-My personal portfolio site. Built from scratch with plain HTML, CSS, and JavaScript — no frameworks, no build step.
+Personal cybersecurity & developer portfolio site of **Gaurav Verma**. Built from scratch with vanilla HTML5, CSS3, JavaScript, and Three.js — no heavy frameworks or bloated build steps.
 
-## What's in here
+## Highlights & Features
 
-- **3D animated background** using Three.js — floating geometric shapes that respond to the current theme
-- **Interactive physics playground** — gravity, vacuum, black hole, and explode modes that let you fling the page content around
-- **GitHub projects** pulled live from the API, so the site stays up to date whenever I create or delete a repo
-- **TryHackMe & LeetCode progress** auto-updated every 12 hours via a GitHub Action
-- **TrustHouse section** — a startup project I'm actively building
-- **Dark / light theme** toggle with smooth transitions across the entire page
-- Fully responsive down to 320px screens
+- **3D Voxel Sky-Isle Diorama**: Built with Three.js — a floating 16-bit voxel island featuring procedural pine trees, mountain peaks, and orbiting moon & cloud rigs with real-time mouse parallax and responsive camera scaling.
+- **Authentic DOM Text Physics Engine**: Real-time interactive physics powered by a custom physics engine (Gravity, Vacuum, Black Hole Vortex, and Kinetic Explode) with a complete DOM snapshot-and-restore system ensuring 100% fidelity on reset.
+- **Dynamic GitHub Public Repositories**: Automatically fetches and renders public non-forked security and programming projects live from the GitHub REST API, categorized with language pills and live star metrics.
+- **Live Hacker Kali Terminal**: Interactive Linux terminal with dynamic `ls ~/projects | wc -l` counter reflecting public repository count in real-time.
+- **Learning & CTF Progress Tracker**: Automated GitHub Action syncing TryHackMe and LeetCode profile metrics every hour.
+- **Verified Credentials**: Certified LLM Security Professional (CLLMSP) from Red Team Leaders.
+- **Responsive & Mobile-Optimized**: Designed for desktop and mobile devices down to 320px screens, featuring a compact mobile navigation drawer and streamlined single-row physics controls.
 
-## Tech
+## Tech Stack
 
-- Vanilla HTML / CSS / JS
-- Three.js (loaded from CDN) for the background scene
-- GitHub REST API for live project cards
-- GitHub Actions + Python for TryHackMe and LeetCode data sync
+- **Frontend**: Vanilla HTML5, Modern CSS3 (Custom Variables, Grid, Flexbox, CRT Scanlines, Glassmorphism), Vanilla ES6+ JavaScript
+- **3D Graphics**: Three.js (WebGL)
+- **APIs & Automation**: GitHub REST API, GitHub Actions, Python 3 data sync scripts
+- **Typography**: VT323, DotGothic16, Space Grotesk, JetBrains Mono
 
-## Live
+## Live Website
 
 **[gvbytes.com](https://gvbytes.com)**
+
+---
 
 ## Security Research
 
 ### SRM Secure Browser (v1.0.22) Vulnerability Report
-I did some security research on the SRMUG-Secure-Browser app used for online exams and found a few serious issues. I reported them to the SRM tech team via email, but never got any response.
+Security research and vulnerability audit conducted on the SRMUG-Secure-Browser application used for remote proctored online examinations:
 
-Here's the quick breakdown of what I found:
-* **Hardcoded AES Keys**: The app was decrypting Firebase database configurations and WebRTC ICE credentials in the renderer using hardcoded AES keys. Anyone could extract these and gain full read/write access to the database.
-* **Proctoring Bypass**: The `postMessage` handler in `preload.js` had no origin check. Any site running inside an iframe or custom script could tell the browser to stop proctoring, shutting down webcam and screen sharing feeds without warnings.
-* **Client-Side Grading**: Correct exam answers were stored in `localStorage` and graded client-side before the final submit. This made it trivial to dump the answer key or manipulate the exam score.
+- **Hardcoded AES Keys**: The application decrypted Firebase database configurations and WebRTC ICE credentials in the renderer process using hardcoded symmetric AES keys, allowing unauthorized full read/write access to the central database.
+- **Proctoring Bypass**: The `postMessage` handler in `preload.js` lacked strict origin validation. Any site running inside an iframe or custom script could command the browser to terminate proctoring processes, disabling webcam and screen monitoring feeds silently without alert.
+- **Client-Side Grading**: Correct exam answers were cached in `localStorage` and graded on the client side before final submission, making it trivial to extract the full answer key or manipulate submission scores.
 
-I have uploaded the full generated review report as proof: **[srm-secure-browser-report.html](srm-secure-browser-report.html)** (also hosted live at [gvbytes.com/srm-secure-browser-report.html](https://gvbytes.com/srm-secure-browser-report.html)).
+Full generated security review report: **[srm-secure-browser-report.html](srm-secure-browser-report.html)** (also hosted live at [gvbytes.com/srm-secure-browser-report.html](https://gvbytes.com/srm-secure-browser-report.html)).
