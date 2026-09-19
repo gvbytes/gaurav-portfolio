@@ -834,7 +834,7 @@
         if (cyberRepos.length > 0) {
             const h3 = document.createElement('h3');
             h3.className = 'project-group-title pixel';
-            h3.innerHTML = `Cybersecurity Tools and Analysis`;
+            h3.innerHTML = `Built with Passion`;
             container.appendChild(h3);
 
             const grid = document.createElement('div');
