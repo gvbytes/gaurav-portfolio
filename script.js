@@ -202,7 +202,7 @@
 			diorama.position.y = 0.5 + Math.sin(elapsedTime) * 0.25;
 
 			// Constant rotation speed
-			diorama.rotation.y = elapsedTime * 0.15 + mouseX * 0.3;
+			diorama.rotation.y = elapsedTime * 0.6 + mouseX * 0.3;
 
 			diorama.rotation.x = 0.25 - mouseY * 0.2;
 
