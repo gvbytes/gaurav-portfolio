@@ -22,16 +22,3 @@ Personal cybersecurity & developer portfolio site of **Gaurav Verma**. Built fro
 ## Live Website
 
 **[gvbytes.com](https://gvbytes.com)**
-
----
-
-## Security Research
-
-### SRM Secure Browser (v1.0.22) Vulnerability Report
-Security research and vulnerability audit conducted on the SRMUG-Secure-Browser application used for remote proctored online examinations:
-
-- **Hardcoded AES Keys**: The application decrypted Firebase database configurations and WebRTC ICE credentials in the renderer process using hardcoded symmetric AES keys, allowing unauthorized full read/write access to the central database.
-- **Proctoring Bypass**: The `postMessage` handler in `preload.js` lacked strict origin validation. Any site running inside an iframe or custom script could command the browser to terminate proctoring processes, disabling webcam and screen monitoring feeds silently without alert.
-- **Client-Side Grading**: Correct exam answers were cached in `localStorage` and graded on the client side before final submission, making it trivial to extract the full answer key or manipulate submission scores.
-
-Full generated security review report: **[srm-secure-browser-report.html](srm-secure-browser-report.html)** (also hosted live at [gvbytes.com/srm-secure-browser-report.html](https://gvbytes.com/srm-secure-browser-report.html)).
